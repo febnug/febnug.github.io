@@ -1,0 +1,249 @@
+
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="https://fnlqxz.my.id/blog/main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">NAT VPS Playground</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<p><i>Pengalaman ngoprek NAT VPS</i></p>
+<h3>Intro</h3>
+<p>Di sini gua nulis catetan pengalaman gua ngoprek NAT VPS, cukup menarik karena berbeda dari VPS kek biasanya, gua pake cloudflare buat manage DNS website gua biar lebih praktis aja (maybe)</p>
+<h3>Sewa NAT VPS</h3>
+<p>Gua sewa di <a href="https://hostdata.id">hostdata</a></p>
+<h3>Setup</h3>
+<h4>Setting IP dan Port buat akses SSH ke server</h4>
+<p>Di clientarea masuk ke my services nanti pilih aja service vpsnya, scroll ke bawah nanti nemu <b>Domain Forwarding</b></p>
+<p><img src="./img/norman-kontol1.png"/></p>
+<p>Kalo udah di klik, klik tab <b>Add</b></p>
+<p>Isi kek gini</p>
+<p><img src="./img/tolol.png"/></p>
+<p>Source portnya di sesuain sampe <b>success</b>
+<p><img src="./img/ya2.png"/></p>
+<p>Akses ke server, pake putty masuking IP dan portnya yang tadi, 38.46.219.162 port 56561, kalo berhasil login kek gini
+<p><img src="./img/tolol2.png"/></p>
+<h4>Setting IP dan Port buat akses webserver</h4>
+<p>Di clientarea masuk ke my services nanti pilih aja service vpsnya, scroll ke bawah nanti nemu <b>Domain Forwarding</b></p>
+<p><img src="./img/norman-kontol1.png"/></p>
+<p>Kalo udah di klik, klik tab <b>Add</b></p>
+<p>Isi kek gini</p>
+<p><img src="./img/ya.png"/></p>
+<p>Source portnya di sesuain sampe <b>success</b>
+<p><img src="./img/ya2.png"/></p>
+<p>Coba akses</p>
+<p><img src="./img/ya3.png"/></p>
+<h4>Setting domain di Cloudflare</h4>
+<p>Register akun cloudflare <a href="https://cloudflare.com">di sini</a></p>
+<p>Kalo udah masuk tinggal masukin domain lo, klik ini:</p>
+<p><img src="./img/norman1.png"/></p>
+<p>Atau</p>
+<p><img src="./img/norman2.png"/></p>
+<p>Nanti muncul kek gini:</p>
+<p><img src="./img/norman3.png"/></p>
+<p>Ketik nama domainnya, abis itu continue</p>
+<p><img src="./img/norman4.png"/></p>
+<p>Di bagian select a plan, pilih yang Free</p>
+<p><img src="./img/norman5.1.png"/></p>
+<p><img src="./img/norman5.2.png"/></p>
+<p>Di bagian Review your DNS records, isi nama domain dan IP (di sesuaikan)</p>
+<p><img src="./img/norman6.1.png"/></p>
+<p><img src="./img/norman6.2.png"/></p>
+<p>Isi seperti ini, IP gua dapet pas abis order, di sesuain cok, terus di save</p>
+<p><img src="./img/norman7.png"/></p>
+<p>Abis itu continue</p>
+<p><img src="./img/norman8.png"/></p>
+<p>Pas disini nanti isi nameserver dari cloudflare, ke clientarea hostdata, gua dapetnya ini</p>
+<p><img src="./img/norman9.png"/></p>
+<p><pre>
+alexa.ns.cloudflare.com
+venkat.ns.cloudflare.com
+</pre></p>
+<p>Di bagian clientarea, <b>Domains -> My Domains -> Klik domainnya</b>, klik bagian <b>Nameservers</b>, isi nameservernya, terus klik Change Nameservers</p>
+<p><img src="./img/norman10.png"/></p>
+<p>Ke cloudflare lagi, klik continue</p>
+<p><img src="./img/norman11.png"/></p>
+<p>Tinggal tungguin aja, nanti aktif sendiri cok</p>
+<p><img src="./img/norman12.png"/></p>
+<p>Kalo udah aktif kek gini</p>
+<p><img src="./img/norman13.png"/></p>
+<p>Abis itu masuk ke bagian SSL/TLS</p>
+<p><img src="./img/norman14.png"/></p>
+<p>Klik Edge Certificates</p>
+<p><img src="./img/norman15.png"/></p>
+<p>Scroll ke bawah, cari kek gini terus di centang</p>
+<p><img src="./img/norman16.png"/></p>
+<h4>Bermain dengan Docker</h4>
+<p>Misal kita mau pasang traefik di vpsnya, pasang dulu ini docker composenya</p>
+<p><pre>
+version: '3'
+
+services:
+  reverse-proxy:
+    # The official v3 Traefik docker image
+    image: traefik:v3.3
+    # Enables the web UI and tells Traefik to listen to docker
+    command: --api.insecure=true --providers.docker
+    ports:
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+</pre></p>
+<p>Bikin file namanya <b>docker-compose.yml</b>, isinya kode diatas, abis itu di save filenya</p>
+<p>Terus ketik <code>docker-compose up -d reverse-proxy</code>, cek lagi pake perintah <code>docker ps -a</code> buat mastiin servicenya berjalan apa engga</p>
+<p><pre>
+root@tolol:~# docker ps -a
+CONTAINER ID   IMAGE            COMMAND                  CREATED          STATUS          PORTS                                               NAMES
+c68d9ea1d267   traefik:v3.3     "/entrypoint.sh --ap…"   22 minutes ago   Up 22 minutes   80/tcp, 0.0.0.0:8080->8080/tcp, :::8080->8080/tcp   root_reverse-proxy_1</pre></p>
+<p>Di clientarea masuk ke my services nanti pilih aja service vpsnya, scroll ke bawah nanti nemu <b>Domain Forwarding</b></p>
+<p><img src="./img/norman-kontol1.png"/></p>
+<p>Kalo udah di klik, klik tab <b>Add</b></p>
+<p>Isi kek gini</p>
+<p><img src="./img/norman-kontol2.png"/></p>
+<p>Source port, di sesuain sampe <b>success</b></p>
+<p><img src="./img/norman-kontol3.png"/></p>
+<p>Coba akses</p>
+<p><img src="./img/norman-kontol4.png"/></p>
+<p>Kalo mau pasang service berbasis docker yang laen, caranya kurang lebih sama kek gitu</p>
+<h3>Kesimpulan</h3>
+<p>Ini artikel gak jelas cok</p>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+</body></html>
+

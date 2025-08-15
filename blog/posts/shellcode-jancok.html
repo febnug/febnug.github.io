@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Analisis shellcode di tweet platform X</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<h3>TLDR;</h3>
+<p>Intinya cuma analisis biasa cok, lesgo</p>
+<p>Nemu sebuah postingan di twitter alias X, menarik, apa? berupa shellcode</p>
+<p><img src="../../img/jancok1.jpg"/></p>
+<p>Code:</p>
+<p><pre>
+"\xb8\xff\xef\xff\xff\xf7\xd0"
+"\x2b\xe0\x55\x8b\xec\x33\xff"
+"\x57\x83\xec\x04\xc6\x45\xf8"
+"\x63\xc6\x45\xf9\x6d\xc6\x45"
+"\xfa\x64\xc6\x45\xfb\x2e\xc6"
+"\x45\xfc\x65\xc6\x45\xfd\x78"
+"\xc6\x45\xfe\x65\x8d\x45\xf8"
+"\x50\xbb\xc7\x93\xbf\x77\xff"
+"\xd3"
+</pre>
+</p>
+<h3>Analisis</h3>
+<ol>
+<li><b>Konversi ke Instruksi Assembly</b></li>
+<p>Shellcode ini berbentuk bytecode, sehingga kita perlu mendisassembling-nya menjadi kode assembly yang dapat dibaca.</p>
+<p>Menggunakan alat seperti ndisasm atau objdump -D, kita bisa mendapatkan instruksi assembly-nya:</p>
+<p><pre>
+  b8 ffefffff          mov eax, 0xffffefff
+  f7 d0                not eax
+  2b e0                sub esp, eax
+  55                   push ebp
+  8b ec                mov ebp, esp
+  33 ff                xor edi, edi
+  57                   push edi
+  83 ec 04             sub esp, 4
+  c6 45 f8 63          mov byte [ebp-8], 'c'
+  c6 45 f9 6d          mov byte [ebp-7], 'm'
+  c6 45 fa 64          mov byte [ebp-6], 'd'
+  c6 45 fb 2e          mov byte [ebp-5], '.'
+  c6 45 fc 65          mov byte [ebp-4], 'e'
+  c6 45 fd 78          mov byte [ebp-3], 'x'
+  c6 45 fe 65          mov byte [ebp-2], 'e'
+  8d 45 f8             lea eax, [ebp-8]
+  50                   push eax
+  bb c7 93 bf 77       mov ebx, 0x77bf93c7
+  ff d3                call ebx
+</pre>
+</p>
+<li><b>Analisis Tiap Instruksi</b></li>
+<h4>Setup dan Persiapan Stack</h4>
+<p><pre>
+b8 ffefffff          mov eax, 0xffffefff
+f7 d0                not eax
+2b e0                sub esp, eax
+</pre>
+</p>
+<p>Menghitung alamat tertentu dalam stack.</p>
+<h4>Menyiapkan Frame Stack</h4>
+<p><pre>55                   push ebp
+8b ec                mov ebp, esp
+</pre></p>
+<p>Menyimpan ebp dan mengatur ebp sebagai pointer stack frame.</p>
+<h4>Menyiapkan String "cmd.exe" di Stack</h4>
+<p><pre>c6 45 f8 63          mov byte [ebp-8], 'c'
+c6 45 f9 6d          mov byte [ebp-7], 'm'
+c6 45 fa 64          mov byte [ebp-6], 'd'
+c6 45 fb 2e          mov byte [ebp-5], '.'
+c6 45 fc 65          mov byte [ebp-4], 'e'
+c6 45 fd 78          mov byte [ebp-3], 'x'
+c6 45 fe 65          mov byte [ebp-2], 'e'
+</pre></p>
+<p>String "cmd.exe" dimasukkan ke dalam stack.</p>
+<h4>Mengambil Alamat String</h4>
+<p><pre>8d 45 f8             lea eax, [ebp-8]
+50                   push eax
+</pre></p>
+<p>Mengambil alamat "cmd.exe" dan meletakkannya di stack.</p>
+<h4>Menjalankan WinExec</h4>
+<p><pre>bb c7 93 bf 77       mov ebx, 0x77bf93c7
+ff d3                call ebx
+</pre></p>
+<p>EBX diisi dengan alamat fungsi API Windows (WinExec).</p>
+<p>call ebx memanggil WinExec("cmd.exe").</p>
+<li><b>Kesimpulan</b></li>
+<p>Shellcode ini:</p>
+<p>- Menggunakan API WinExec di Windows untuk menjalankan "cmd.exe".</p>
+<p>- Ini adalah payload yang digunakan untuk membuka Command Prompt (cmd.exe).</p>
+<p>- Alamat 0x77bf93c7 adalah alamat WinExec pada beberapa versi Windows XP.</p>
+<p>Jika ingin menjalankannya di sistem modern, perlu memperbarui alamat fungsi karena Address Space Layout Randomization (ASLR) akan menyebabkan perubahan alamat memori.</p>
+<br><br>
+<p><b>Salam jancok</b></p>
+</ol>
+
+
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+</body></html>
+

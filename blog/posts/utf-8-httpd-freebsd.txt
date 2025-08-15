@@ -1,0 +1,69 @@
++----------------------------------------------
+| Tambahin dukungan utf-8 di webserver FreeBSD
+|
+| - febri
++----------------------------------------------
+
+Agar web server Apache 2.4 di FreeBSD mendukung UTF-8, Anda perlu memastikan konfigurasi berikut:
+
+1. Pastikan Apache Memuat Modul yang Diperlukan
+------------------------------------------------
+Apache harus memiliki modul mod_mime yang biasanya sudah diaktifkan secara default. Cek dengan perintah berikut:
+
+httpd -M | grep mime
+
+Jika belum aktif, tambahkan baris berikut di file konfigurasi Apache (httpd.conf):
+
+LoadModule mime_module libexec/apache24/mod_mime.so
+
+2. Tetapkan Charset Default ke UTF-8
+------------------------------------
+Edit file konfigurasi utama Apache (/usr/local/etc/apache24/httpd.conf) atau file virtual host yang sesuai, lalu tambahkan atau modifikasi baris berikut:
+
+AddDefaultCharset UTF-8
+
+3. Pastikan Direktori atau Virtual Host Juga Mendukung UTF-8
+------------------------------------------------------------
+Jika Anda menggunakan VirtualHost, tambahkan dalam blok <VirtualHost>:
+
+<VirtualHost *:80>
+    ServerName contoh.com
+    DocumentRoot "/usr/local/www/apache24/data"
+
+    <Directory "/usr/local/www/apache24/data">
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+        AddDefaultCharset UTF-8
+    </Directory>
+</VirtualHost>
+
+4. Pastikan File HTML Menggunakan UTF-8
+----------------------------------------
+Setiap halaman HTML harus memiliki meta tag UTF-8:
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta charset="UTF-8">
+
+5. Restart Apache
+------------------
+Setelah melakukan perubahan, restart Apache agar konfigurasi diterapkan:
+
+service apache24 restart
+
+
+Menambahkan Secara Global (Direkomendasikan)
+--------------------------------------------
+Tambahkan di bagian Global Configuration, biasanya setelah pengaturan ServerRoot dan sebelum <Directory />:
+
+ServerRoot "/usr/local/etc/apache24"
+
+# Tambahkan di sini
+AddDefaultCharset UTF-8
+
+<Directory />
+    AllowOverride none
+    Require all denied
+</Directory>
+
+Ini akan memastikan semua halaman yang disajikan oleh Apache menggunakan UTF-8 secara default.

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Panduan install Arch Linux</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+
+<center><img src="../../img/archlinux-meme.jpg"/></center>
+<center><p><i>Sumber gambar: <a href="https://web.facebook.com/itsfoss">It's FOSS</a></i></p></center>
+    <h3>Download ISO</h3>
+    <p>Download ISOnya <a href="https://mirror.archlinux32.org/archisos/">di sini</a></p>
+        <h3>Setting Jaringan</h3>
+    <p>Pake <code>iwctl</code>, caranya, ketik <code>iwctl</code></p>
+    <p>Ketika masuk shell <code>iwctl</code> :</p>
+    <p><pre>[iwctl]# device list</pre></p>
+    <p>Muncul interface devicenya, misal <code>wlan0</code></p>
+    <p>Abis itu ketik :</p>
+    <p><pre>
+[iwctl]# station wlan0 scan
+[iwctl]# station wlan0 get-networks</pre></p>
+    <p>Nanti muncul beberapa SSID wifinya, misal disini mau konek ke SSID <code>Febri's Hotspot</code></p>
+    <p>Ketik :</p>
+    <p><pre>[iwctl]# station wlan0 connect "Febri's Hotspot"</pre></p>
+    <p>Tinggal masukin passwordnya, cek koneksi dengan <code>ping</code></p>
+    <h3>Partisi</h3>
+    <p>Misal disk hdd atau ssd terbaca dengan nama <code>/dev/sda</code></p>
+<p>Tabelnya kaya gini :</p>
+<p><pre>
+Device		Boot	........    Size
+----------------------------------------
+/dev/sda1        *		    200M
+/dev/sda2			    2G
+/dev/sda3			    295G
+</pre>
+</p>
+<p>Dengan catatan :</p>
+<p><pre>
+/dev/sda1 = bootloader
+/dev/sda2 = swap
+/dev/sda3 = /
+</pre></p>
+
+<h3>Instalasi</h3>
+<p>Ketik perintah ini :</p>
+<p><pre>
+mkfs.ext4 /dev/sda1
+mkswap /dev/sda2
+swapon /dev/sda2
+mkfs.btrfs /dev/sda3
+</pre>
+</p>
+<p><b>disini gw pake filesystem btrfs</b></p>
+<p>Abis itu edit file <code>/etc/pacman.conf</code>, ketik <code>nano /etc/pacman.conf</code></p>
+<p><pre>
+Siglevel = Never
+#LocalFileSigLevel = Optional
+#RemoteFileSigLevel = Required
+</pre></p>
+<p>Ikutin aja kaya di atas, terus di save</p>
+<p>Abis itu ketik :</p>
+<p><pre>
+timedatectl set-ntp true
+mount /dev/sda3 /mnt
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+</pre></p>
+<p>Kurang lebih kaya gini tampilan tree disknya, ketik <code>lsblk</code></p>
+<p><pre>
+ sda
+  |
+  +--- sda1 .... /mnt/boot
+  |
+  +--- sda2 .... swap
+  |
+  +--- sda3 .... /mnt
+</pre></p>
+<p>Abis itu install base systemnya, ketik :</p>
+<p><code>pacstrap /mnt base base-devel linux linux-firmware nano</code></p>
+<p>Tunggu aja ampe selesai.</p>
+<p>Kalo udah selesai, ketik :</p>
+<p><pre>
+genfstab /mnt
+genfstab -U /mnt >> /mnt/etc/fstab
+genfstab -U /mnt
+arch-chroot /mnt /bin/bash
+</pre></p>
+<p>Pastiin lagi, edit file <code>/etc/pacman.conf</code>, ketik <code>nano /etc/pacman.conf</code></p> 
+<p><pre>
+Siglevel = Never
+#LocalFileSigLevel = Optional
+#RemoteFileSigLevel = Required
+</pre></p>
+<p>Abis itu di save</p>
+<p>Lanjut, ketik :</p>
+<p><pre>
+pacman -S networkmanager grub
+systemctl enable NetworkManager
+grub-install /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
+</pre></p>
+<p>Abis itu ubah password <b>root</b>, ketik <code>passwd</code> input password baru</p>
+<p>Ketik <code>nano /etc/locale.gen</code>, cari :</p>
+<p><pre>
+en_US.UTF-8 UTF-8
+en_US ISO-88 59-1
+</pre></p>
+<p>Un-comment aja</p>
+<p>Ketik <code>locale-gen</code></p>
+<p>Abis itu, ketik <code>nano /etc/hostname</code>, isi hostnamenya misal <code>febri</code>, terus di save</p>
+<p>Ketik <code>ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime</code></p>
+<p>Ketik <code>exit</code></p>
+<p>Unmount disk, ketik <code>umount -R /mnt</code></p>
+<p>Restart sistem, ketik <code>reboot</code></p>
+
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

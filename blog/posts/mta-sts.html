@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+  
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Cara benerin error MTA-STS policy is missing: STSFetchResult.NONE</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<p>Error "MTA-STS policy is missing: STSFetchResult.NONE" terjadi karena domain email Anda belum mengonfigurasi kebijakan MTA-STS (Mail Transfer Agent - Strict Transport Security) dengan benar. MTA-STS adalah standar keamanan email yang membantu mencegah serangan Man-in-the-Middle (MITM) dengan memaksa komunikasi terenkripsi antara server email.</p>
+<h3>Cara Memperbaiki Error MTA-STS policy is missing</h3>
+<p>Berikut langkah-langkah untuk memperbaiki error ini:</p>
+<ol>
+<li><b>Buat DNS Record untuk MTA-STS</b></li>
+<p>Tambahkan record berikut di DNS domain Anda:</p>
+<p><b>Tipe TXT untuk MTA-STS</b></p>
+<p>Host: <code>_mta-sts.yourdomain.com</code></p>
+<p>Value: <code>v=STSv1; id=20240228;</code>
+<li><b>Buat File Policy MTA-STS</b></li>
+<p>Buat file policy.txt dengan isi berikut:</p>
+<p><pre>
+version: STSv1
+mode: enforce
+mx: mail.yourdomain.com
+max_age: 86400
+</pre></p>
+<p>Penjelasan:</p>
+<ul>
+<li><code>version: STSv1</code> → Versi kebijakan.</li>
+<li><code>mode: enforce</code> → Mengaktifkan kebijakan secara ketat (bisa diganti testing untuk pengujian).</li>
+<li><code>mx: mail.yourdomain.com</code> → Ganti dengan server MX yang digunakan oleh domain Anda.</li>
+<li><code>max_age: 86400</code> → Masa berlaku kebijakan dalam detik (1 hari).</li>
+</ul>
+<li><b>Hosting File Policy di HTTPS</b></li>
+<p>File policy.txt harus dihosting di:</p>
+<p><pre>
+https://mta-sts.yourdomain.com/.well-known/mta-sts.txt
+</pre></p>
+<p>Jika Anda memiliki server sendiri, buat direktori .well-known dan simpan file di dalamnya:</p>
+<p><pre>
+/var/www/html/.well-known/mta-sts.txt
+</pre></p>
+<p>Pastikan bahwa:</p>
+<ul>
+<li>File dapat diakses di HTTPS.</li>
+<li>Tidak ada redirect ke HTTP.</li>
+<li>Menggunakan sertifikat SSL yang valid.</li>
+</ul>
+<li><b>Periksa Konfigurasi dengan Alat Pengecekan</b></li>
+<p>Setelah selesai, gunakan alat berikut untuk memverifikasi konfigurasi:</p>
+<ul>
+<li>Google Admin Toolbox Check MX → <a href="https://toolbox.googleapps.com/apps/checkmx/">https://toolbox.googleapps.com/apps/checkmx/</a></li>
+<li>MTA-STS Validator → <a href="https://aykevl.nl/apps/mta-sts/">https://aykevl.nl/apps/mta-sts/</a></li>
+</ul>
+</ol>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+</body></html>
+

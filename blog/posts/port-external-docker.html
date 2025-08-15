@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Cara enable port external Docker</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<p>Halo, bersama orang bego lagi kali ini gue ber-eksperimen pengen enable port eksternalnya docker, di kasus ini gue pengen monitoring container docker lewat uptime kuma, tapi disini gue nyoba di Ubuntu Server 24.04.1 di virtualbox aja karena gue masih bloon aja nih.</p>
+<p>Oke, <strike>kanjut</strike> lanjut</p>
+<h3>Lesgo</h3>
+<p>Anggap ubuntu servernya udah konek internet dan udah install docker dan udah di pasang uptime kuma, bikin file <code>daemon.json</code> di <code>/etc/docker/</code></p>
+<p><pre>root@ubuntu:~# cat /etc/docker/daemon.json
+{
+  "hosts": ["tcp://0.0.0.0:2375", "unix:///var/run/docker.sock"],
+  "metrics-addr": "0.0.0.0:9323",
+  "experimental": true
+}
+root@ubuntu:~#</pre></p>
+<p>Yang port 9323 itu port docker metrics, terserah kalo ga mau di pake di comment aja</p>
+<p>Terus bikin folder <code>/etc/systemd/system/docker.service.d/</code> terus bikin file <code>override.conf</code></p>
+<p><pre>root@ubuntu:~# cat /etc/systemd/system/docker.service.d/override.conf
+ [Service]
+ ExecStart=
+ ExecStart=/usr/bin/dockerd
+root@ubuntu:~#</pre></p>
+<p>Reload daemon, <code>systemctl daemon-reload</code></p>
+<p>Abis itu restart docker, <code>systemctl restart docker</code></p>
+<p>Kalo berhasil ga ada error kek gini hasilnya cok:</p>
+<p><img src="../../img/kontol/ngehe.png"/></p>
+<p><img src="../../img/kontol/ngehe2.png"/></p>
+<h3>Testing di Uptime Kuma</h3>
+<p>Coba tes di uptime kuma, kek gini</p>
+<p><img src="../../img/kontol/ngehe3.png"/></p>
+<p>Anggap kita mau monitoring kontainernya dengan id kontainer <code>f73404acc5c2</code>
+<p>Di bagian Docker Host, klik tanda <code>+</code>
+<p><img src="../../img/kontol/ngehe4.png"/></p>
+<p>Isi namanya bebas, terus pilih Connection Type nya <code>TCP/HTTP</code>, isi Docker Daemonnya <code>http://192.168.43.238:2375/</code>, abis itu klik test, kalo berhasil kek di gambar terus klik save</p>
+<p>Klik save</p>
+<p><img src="../../img/kontol/ngehe5.png"/></p>
+<p>Tampilannya kek gini</p>
+<p><img src="../../img/kontol/ngehe6.png"/></p>
+<h3>Silly Me</h3>
+<p>Gue dah coba di VPS gue, tapi gagal</p>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>
+

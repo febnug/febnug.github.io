@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Install unicorn di Arch Linux 32-bit</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3>Install paket dependensi</h3>
+    <p>Install pip</p>
+    <p>
+    <pre>pacman -S python-pip</pre>
+    </p>
+    <p>Install pipx</p>
+    <p>
+    <pre>pacman -S python-pipx</pre>
+    </p>
+    <h3>Install unicorn</h3>
+    <p>Install setuptools</p>
+    <p>
+    <pre>pip install setuptools --break-system-packages</pre>
+    </p>
+    <p>Install unicorn</p>
+    <p>
+    <pre>pip install unicorn --break-system-packages</pre>
+    </p>
+    <h3>Testing</h3>
+    <p>Disini gw coba emulate instruksi aarch64</p>
+    <p>
+    <pre>from unicorn import *
+from unicorn.arm64_const import *
+
+# Kode ARM64 dalam bentuk string
+ARM64_CODE = (
+    b"\xd2\x10\x01\x91"  # mov x8, #0x81
+    b"\xe0\x00\x3f\xaa"  # mvn x0, x2
+    b"\x21\x00\x00\x91"  # mov x1, #0x9
+    b"\xd4\x20\xff\xd3"  # svc #0x1337
+)
+
+# Mulai alamat emulasi
+ADDRESS = 0x1000
+
+# Inisialisasi mesin emulasi Unicorn untuk ARM64
+mu = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
+
+# Alokasikan memori
+mu.mem_map(ADDRESS, 0x1000)
+
+# Tulis kode ke memori
+mu.mem_write(ADDRESS, ARM64_CODE)
+
+# Atur register
+mu.reg_write(UC_ARM64_REG_X8, 0)
+mu.reg_write(UC_ARM64_REG_X0, 0)
+mu.reg_write(UC_ARM64_REG_X1, 0)
+mu.reg_write(UC_ARM64_REG_X2, 0)
+
+# Emulasikan kode mulai dari ADDRESS
+try:
+    mu.emu_start(ADDRESS, ADDRESS + len(ARM64_CODE))
+except UcError as e:
+    print(f"ERROR: {e}")
+
+# Baca dan cetak opcode dari kode yang dieksekusi
+for i in range(0, len(ARM64_CODE), 4):
+    opcode = mu.mem_read(ADDRESS + i, 4)
+    print(f"Opcode: {' '.join(f'{b:02x}' for b in opcode)}")
+</pre>
+</p>
+<p>Hasil output</p>
+<p>
+<pre>
+ERROR: Unhandled CPU exception (UC_ERR_EXCEPTION)
+Opcode: d2 10 01 91
+Opcode: e0 00 3f aa
+Opcode: 21 00 00 91
+Opcode: d4 20 ff d3
+</pre>
+</p>
+<p><b>notes : gatau juga kenapa musti pake <code>--break-system-packages</code></b></p>
+<p>Yang penting <b>it works!</b></p>
+
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

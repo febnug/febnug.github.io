@@ -1,0 +1,43 @@
+7 Seri FreeBSD SysAdmin
+FreeBSD SysAdmin Pre-Basic
+Introduction to FreeBSD & FSI System
+Introduction to VirtualBox/VMWare
+Introduction to SSH/Putty
+Introduction to TCP/IP
+Introduction to SCP/WinSCP
+Basic Unix/Linux Command Line
+FreeBSD SysAdmin #1
+Basic Installation
+FAMP Server
+CMS Server w/ Wordpress, Drupal, Joomla
+FreeBSD SysAdmin #2
+Basic Installation
+DNS Recursive w/ Unbound
+DNS Authoritative w/ PowerDNS + PowerAdmin
+FreeBSD SysAdmin #3 
+Basic Installation
+Building Router, Gateway & Nat 
+DHCP Server
+PPTP Tunnel with mpd5 Server
+VPN Tunnel w/ OpenVPN Server
+FreeBSD SysAdmin #4
+Basic Installation
+FTP Server w/ ftpd & PureFTPd
+NFS Server
+Samba Server
+Owncloud
+FreeBSD SysAdmin #5
+Basic Installation
+MailServer w/ iredmail using MariaDB
+MailServer w/ iredmail using LDAP
+MailServer w/ Zimbra
+FreeBSD SysAdmin #6
+Basic Installation
+Proxy Server w/ Squid
+Tor Server w/ polipo
+TorrentBox w/ Transmission
+FreeBSD SysAdmin #7
+Basic Installation
+Git Server w/ Git
+SVN Server w/ svn web
+Custom Kernel w/ STABLE

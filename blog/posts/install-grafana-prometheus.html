@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Install grafana dan prometheus + prometheus node exporter</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3>Download file</h3>
+<p><ol>
+<li><a href="https://prometheus.io/download/">prometheus</a></li>
+<li><a href="https://prometheus.io/download/#node_exporter">prometheus node exporter</a></li>
+</ol>
+</p>
+<h3>Bikin user, usergroup</h3>
+<p>Bikin user dengan usergroup dengan nama <code>prometheus</code></p>
+<p><pre>
+sudo groupadd --system prometheus
+sudo useradd --system -s /sbin/login -g prometheus prometheus</pre></p>
+<h3>Install prometheus</h3>
+<p>Ekstrak file yang udah di download</p>
+    <p><pre>
+tar xvf prometheus-2.54.1.linux-amd64.tar.gz</pre></p>
+<p>Masuk ke direktori prometheus, terus pindahin filenya</p>
+<p><pre>
+cd prometheus-2.54.1.linux-amd64
+sudo mv prometheus promtool /usr/local/bin
+sudo chown -R root:root /usr/local/bin/prometheus
+sudo chown -R root:root /usr/local/bin/promtool</pre>
+</p>
+<h4>Bikin direktori, <code>/etc/prometheus</code></h4>
+<p><pre>sudo mkdir /etc/prometheus</pre></p>
+<h4>Bikin direktori, <code>/var/lib/prometheus</code></h4>
+<p><pre>sudo mkdir /var/lib/prometheus</pre></p>
+<h4>Rubah ownership direktori, <code>/var/lib/prometheus</code></h4>
+<p><pre>sudo chown -R prometheus:prometheus /var/lib/prometheus</pre></p>
+<p>Cek:</p>
+<p><pre>root@nasigor:~# ls -l /var/lib | grep prometheus
+drwxr-xr-x  9 prometheus prometheus 4096 Sep 28 22:00 prometheus</pre></p>
+<h4>Pindahin file-file ke direktori, <code>/etc/prometheus</code></h4>
+<p><pre>sudo mv consoles/ console_libraries/ prometheus.yml /etc/prometheus</pre></p>
+<h4>Masuk direktori, <code>/etc/prometheus</code></h4>
+<p><pre>root@nasigor:~# cd /etc/prometheus/
+root@nasigor:/etc/prometheus# ls -la
+total 16
+drwxr-xr-x  4 root root   69 Sep 28 08:21 .
+drwxr-xr-x 88 root root 8192 Sep 28 08:28 ..
+drwxr-xr-x  2 root root   38 Aug 27 18:11 console_libraries
+drwxr-xr-x  2 root root  173 Aug 27 18:11 consoles
+-rw-r--r--  1 root root  755 Sep 28 08:21 prometheus.yml
+</pre></p>
+<h4>Rubah file config</h4>
+<p>Rubah aja jadi kek gini, ikutin:</p>
+<p><pre># my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9090"]
+</pre></p>
+<p>prometheus config, <code>prometheus.yml</code>, ketik <code>sudo nano prometheus.yml</code></p>
+<p><pre># my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9090"]
+</pre></p>
+<h4>Bikin file service prometheus</h4>
+<p><pre>sudo nano /etc/systemd/system/prometheus.service</pre></p>
+<p>Isi:</p>
+<p><pre>[Unit]
+Description=Prometheus
+Documentation=https://prometheus.io/docs/introduction/overview/
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+--config.file /etc/prometheus/prometheus.yml \
+--storage.tsdb.path /var/lib/prometheus/ \
+--web.console.templates=/etc/prometheus/consoles \
+--web.console.libraries=/etc/prometheus/console_libraries
+
+[Install]
+WantedBy=multi-user.target</pre></p>
+<p>Enable servicenya</p>
+<p><pre>sudo systemctl enable --now prometheus.service</pre></p>
+<p>Cek servicenya, kalo udah jalan ga ada error biasanya kek gini:</p>
+<p><pre>● prometheus.service - Prometheus
+     Loaded: loaded (]8;;file://nasigor.eng/etc/systemd/system/prometheus.service/etc/systemd/system/prometheus.service]8;;; enabled; preset: enabled)
+     Active: active (running) since Sat 2024-09-28 08:21:47 WIB; 14h ago
+       Docs: ]8;;https://prometheus.io/docs/introduction/overview/https://prometheus.io/docs/introduction/overview/]8;;
+   Main PID: 124623 (prometheus)
+      Tasks: 7 (limit: 1081)
+     Memory: 71.4M
+        CPU: 1min 57.991s
+     CGroup: /system.slice/prometheus.service
+</pre></p>
+<p>Prometheus jalan di port 9090</p>
+<p><pre>
+root@nasigor:/etc/prometheus# lsof -n -i | grep prometheus
+prometheu 124623 prometheus    7u  IPv6 687398      0t0  TCP *:9090 (LISTEN)
+prometheu 124623 prometheus   11u  IPv6 687441      0t0  TCP [::1]:53220->[::1]:9090 (ESTABLISHED)
+prometheu 124623 prometheus   12u  IPv6 687442      0t0  TCP [::1]:9090->[::1]:53220 (ESTABLISHED)
+prometheu 124623 prometheus   13u  IPv6 687495      0t0  TCP [::1]:50272->[::1]:9100 (ESTABLISHED)
+prometheu 124623 prometheus   15u  IPv6 796577      0t0  TCP 103.74.5.26:9090->103.74.5.26:39190 (ESTABLISHED)
+prometheu 124623 prometheus   18u  IPv6 796587      0t0  TCP 103.74.5.26:9090->103.74.5.26:39204 (ESTABLISHED)</pre></p>
+<p>Berarti udah berhasil install prometheusnya, bisa di cek di <code>alamat_ip:9090</code> di browser</p>
+
+<h3>Install prometheus node exporter</h3>
+<h4>Ekstrak file</h4>
+<p><pre>tar xvf node_exporter-1.8.2.linux-amd64.tar.gz</pre></p>
+<h4>Masuk ke direktori</h4>
+<p><pre>cd node_exporter-1.8.2.linux-amd64</pre></p>
+<h4>Pindahin filenya</h4>
+<p><pre>sudo mv node_exporter /usr/local/bin</pre></p>
+<h4>Bikin file service <code>node_exporter</code></h4>
+<p><pre>sudo nano /etc/systemd/system/node-exporter.service</pre></p>
+<p>Isi:</p>
+<p><pre>[Unit]
+Description=Prometheus exporter for machine metrics
+
+[Service]
+Restart=always
+User=prometheus
+ExecStart=/usr/local/bin/node_exporter
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStop=20s
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target
+</pre></p>
+<p>Enable servicenya</p>
+<p><pre>systemctl enable --now node-exporter.service</pre></p>
+<p>Kalo ga ada error, hasilnya kek gini</p>
+<p><pre>● node-exporter.service - Prometheus exporter for machine metrics
+     Loaded: loaded (]8;;file://nasigor.eng/etc/systemd/system/node-exporter.service/etc/systemd/system/node-exporter.service]8;;; enabled; preset: enabled)
+     Active: active (running) since Sat 2024-09-28 08:17:26 WIB; 14h ago
+   Main PID: 124463 (node_exporter)
+      Tasks: 5 (limit: 1081)
+     Memory: 18.7M
+        CPU: 2min 33.582s
+     CGroup: /system.slice/node-exporter.service
+             └─124463 /usr/local/bin/node_exporter
+</pre></p>
+<p>Prometheus node exporter, jalan di port 9100</p>
+<p><pre>root@nasigor:/etc/prometheus# lsof -n -i | grep node
+node_expo 124463 prometheus    3u  IPv6 685767      0t0  TCP *:9100 (LISTEN)
+node_expo 124463 prometheus    7u  IPv6 687496      0t0  TCP [::1]:9100->[::1]:50272 (ESTABLISHED)
+node_expo 124463 prometheus    8u  IPv6 796538      0t0  TCP 103.74.5.26:9100->103.74.5.26:45486 (ESTABLISHED)
+node_expo 124463 prometheus    9u  IPv6 797412      0t0  TCP 103.74.5.26:9100->103.74.5.26:36232 (ESTABLISHED)</pre></p>
+<p>Bisa di cek di browser <code>alamat_ip:9100</code></p>
+<h4>Edit file <code>prometheus.yml</code></h4>
+<p><pre>sudo nano /etc/prometheus/prometheus.yml</pre></p>
+<p>File confignya kek gini, ikutin aja</p>
+<p><pre># my global config
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: "prometheus"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "node-exporter"
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ["localhost:9100"]</pre></p>
+<p>Abis itu restart service prometheus</p>
+<p><pre>sudo systemctl restart prometheus</pre></p>
+<p>Dengan catatan, pastiin ga ada error dan servicenya tetep active dan running</p>
+<p>Hasilnya nanti kek gini</p>
+    <p><img src="../../img/prom.png"/></p>
+
+<h3>Install grafana</h3>
+<p>Tutorialnya ada <a href="https://grafana.com/docs/grafana/latest/setup-grafana/installation/debian/">di sini</a></p>
+<p>Abis itu enable servicenya</p>
+<p><pre>sudo systemctl enable --now grafana-server.service</pre></p>
+<p>Pastiin ga ada error</p>
+<p>Grafana jalan di port 3000, <code>alamat_ip:3000</code></p>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>
+

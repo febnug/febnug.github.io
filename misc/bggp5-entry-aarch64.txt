@@ -1,0 +1,78 @@
+// a boring linux aarch64 elf for bggp5, i think it's not competing entry :)
+// -- febnug
+//
+//
+// build with :
+//
+// aarch64-linux-gnu-as -o bggp5.o bggp5.s
+// aarch64-linux-gnu-ld -o bggp5 bggp5.o
+//
+// run with :
+//
+// qemu-aarch64 ./bggp5
+
+.section .text
+.global _start
+_start:
+    // Alamat string dan argumen
+    ldr x0, =command                   // x0 = "/bin/sh"
+    ldr x1, =args                      // x1 = alamat array argumen
+    ldr x2, =0                         // x2 = NULL untuk environment
+
+    // Panggil sistem call execve
+    mov x8, 221                        // Sistem call execve (nomor 221 di AArch64)
+    svc 0                              // Panggil sistem call
+
+    // Jika execve gagal, keluar dengan status 1
+    mov x8, 93                         // Sistem call exit (nomor 93 di AArch64)
+    mov x0, 1                          // Status keluar (1)
+    svc 0                              // Panggil sistem call
+
+command:
+    .asciz "/bin/sh"                   // String "/bin/sh"
+
+args:
+    .xword command                     // Argumen 0: "/bin/sh"
+    .xword arg1                        // Argumen 1: "-c"
+    .xword arg2                        // Argumen 2: "curl -L https://binary.golf/5/5"
+    .xword 0                           // Terminator array: NULL
+
+arg1:
+    .asciz "-c"                        // Argumen pertama untuk /bin/sh
+
+arg2:
+    .asciz "curl -L https://binary.golf/5/5"  // Argumen kedua untuk /bin/sh
+
+filesize = . - _start
+
+.section .ehdr, "a", %progbits
+    .byte 0x7F, 'E', 'L', 'F'           // e_ident
+    .byte 2, 1, 1                       // e_class (64-bit), e_data (Little Endian), e_version
+    .skip 9                             // Padding dan e_osabi, e_abiversion (diabaikan)
+    .hword 2                             // e_type (2 = Executable file)
+    .hword 183                           // e_machine (183 = AArch64)
+    .word 1                              // e_version
+    .xword _start                        // e_entry (entry point)
+    .xword phdr - .                      // e_phoff (program header offset)
+    .xword 0                             // e_shoff (section header offset)
+    .word 0                              // e_flags (tidak ada flag)
+    .hword ehdrsize                      // e_ehsize (ukuran header ELF)
+    .hword phdrsize                      // e_phentsize (ukuran program header)
+    .hword 1                             // e_phnum (jumlah program header)
+    .hword 0                             // e_shentsize (ukuran section header)
+    .hword 0                             // e_shstrndx (index string section)
+
+ehdrsize = . - .ehdr
+
+.section .phdr, "a", %progbits
+phdr:
+    .word 1                              // p_type (1 = PT_LOAD)
+    .word 0x5                            // p_flags (5 = Execute + Read)
+    .xword 0                              // p_offset (offset segmen dalam file)
+    .xword 0x08048000                     // p_vaddr (alamat virtual segmen)
+    .xword 0x08048000                     // p_paddr (alamat fisik segmen)
+    .xword filesize                       // p_filesz (ukuran segmen dalam file)
+    .xword filesize                       // p_memsz (ukuran segmen dalam memori)
+    .xword 0x1000                         // p_align (penyelarasan segmen)
+
+phdrsize = . - phdr

@@ -1,0 +1,4 @@
+<VirtualHost *:80>
+    DocumentRoot "/usr/local/www/apache24/data/fn"
+    ServerName 103.74.5.26
+</VirtualHost>

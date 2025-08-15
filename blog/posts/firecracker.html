@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Firecracker MicroVMs, dasar-dasar</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<p>Oke, kita mulai tutorial Firecracker MicroVM dari nol dengan asumsi kamu sudah punya:</p>
+<ul>
+<li>hello-vmlinux.bin → kernel ELF uncompressed</li>
+<li>hello-rootfs.ext4 → root filesystem minimal</li>
+</ul>
+<p>Kita jalankan step-by-step sampai microVM boot ke shell.</p>
+<h3>1. Jalankan Firecracker</h3>
+<p>Bersihkan socket lama lalu jalankan Firecracker:</p>
+<p><pre>rm -f /tmp/firecracker.socket
+firecracker --api-sock /tmp/firecracker.socket
+</pre></p>
+<p>Biarkan terminal ini terbuka. Firecracker sekarang “nunggu” konfigurasi lewat API.</p>
+<h3>2. Set kernel (boot-source)</h3>
+<p>Di terminal baru:</p>
+<p><pre>KERNEL_PATH=$(pwd)/hello-vmlinux.bin
+
+curl --unix-socket /tmp/firecracker.socket -i \
+    -X PUT 'http://localhost/boot-source' \
+    -H 'Content-Type: application/json' \
+    -d "{
+        \"kernel_image_path\": \"${KERNEL_PATH}\",
+        \"boot_args\": \"console=ttyS0 reboot=k panic=1 pci=off\"
+    }"
+</pre></p>
+<p>Kalau berhasil, keluar HTTP/1.1 204.</p>
+<h3>3. Set root filesystem (drives)</h3>
+<p>Masih di terminal yang sama:</p>
+<p><pre>ROOTFS_PATH=$(pwd)/hello-rootfs.ext4
+
+curl --unix-socket /tmp/firecracker.socket -i \
+    -X PUT 'http://localhost/drives/rootfs' \
+    -H 'Content-Type: application/json' \
+    -d "{
+        \"drive_id\": \"rootfs\",
+        \"path_on_host\": \"${ROOTFS_PATH}\",
+        \"is_root_device\": true,
+        \"is_read_only\": false
+    }"
+</pre></p>
+<h3>4. Set konfigurasi mesin (machine-config)</h3>
+<p><pre>curl --unix-socket /tmp/firecracker.socket -i \
+    -X PUT 'http://localhost/machine-config' \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "vcpu_count": 1,
+        "mem_size_mib": 128,
+        "smt": false
+    }'
+</pre></p>
+<h3>5. Start MicroVM</h3>
+<p><pre>curl --unix-socket /tmp/firecracker.socket -i \
+    -X PUT 'http://localhost/actions' \
+    -H 'Content-Type: application/json' \
+    -d '{
+        "action_type": "InstanceStart"
+    }'
+</pre></p>
+<h3>6. Lihat Output & Akses Shell</h3>
+<p><pre>
+user@ubuntu:~$ rm -f /tmp/firecracker.socket
+user@ubuntu:~$ firecracker --api-sock /tmp/firecracker.socket
+2025-08-08T19:13:48.907471190 [anonymous-instance:main] Running Firecracker v1.12.1
+2025-08-08T19:13:48.909423842 [anonymous-instance:main] Listening on API socket ("/tmp/firecracker.socket").
+2025-08-08T19:13:48.910194181 [anonymous-instance:fc_api] API server started.
+2025-08-08T19:14:01.844272408 [anonymous-instance:fc_api] The API server received a Put request on "/boot-source" with body "{\n        \"kernel_image_path\": \"/home/user/hello-vmlinux.bin\",\n        \"boot_args\": \"console=ttyS0 reboot=k panic=1 pci=off\"\n    }".
+2025-08-08T19:14:01.844593807 [anonymous-instance:fc_api] The request was executed successfully. Status code: 204 No Content.
+2025-08-08T19:14:10.016461634 [anonymous-instance:fc_api] The API server received a Put request on "/drives/rootfs" with body "{\n        \"drive_id\": \"rootfs\",\n        \"path_on_host\": \"/home/user/hello-rootfs.ext4\",\n        \"is_root_device\": true,\n        \"is_read_only\": false\n    }".
+2025-08-08T19:14:10.016629079 [anonymous-instance:fc_api] The request was executed successfully. Status code: 204 No Content.
+2025-08-08T19:14:18.113999796 [anonymous-instance:fc_api] The API server received a Put request on "/machine-config" with body "{\n        \"vcpu_count\": 1,\n        \"mem_size_mib\": 128,\n        \"smt\": false\n    }".
+2025-08-08T19:14:18.114652631 [anonymous-instance:fc_api] The request was executed successfully. Status code: 204 No Content.
+2025-08-08T19:14:25.848848843 [anonymous-instance:fc_api] The API server received a Put request on "/actions" with body "{\n        \"action_type\": \"InstanceStart\"\n    }".
+2025-08-08T19:14:26.179930533 [anonymous-instance:main] Artificially kick devices.
+2025-08-08T19:14:26.180122097 [anonymous-instance:fc_vcpu 0] Received a VcpuEvent::Resume message with immediate_exit enabled. immediate_exit was disabled before proceeding
+2025-08-08T19:14:26.180248432 [anonymous-instance:fc_api] The request was executed successfully. Status code: 204 No Content.
+[    0.000000] Linux version 4.14.55-84.37.amzn2.x86_64 (mockbuild@ip-10-0-1-79) (gcc version 7.3.1 20180303 (Red Hat 7.3.1-5) (GCC)) #1 SMP Wed Jul 25 18:47:15 UTC 2018
+[    0.000000] Command line: console=ttyS0 reboot=k panic=1 pci=off root=/dev/vda rw virtio_mmio.device=4K@0xd0000000:5
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[    0.000000] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
+[    0.000000] e820: BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x00000000000dffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x0000000007ffffff] usable
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] DMI not present or invalid.
+[    0.000000] Hypervisor detected: KVM
+[    0.000000] tsc: Fast TSC calibration using PIT
+[    0.000000] e820: last_pfn = 0x8000 max_arch_pfn = 0x400000000
+[    0.000000] MTRR: Disabled
+[    0.000000] x86/PAT: MTRRs disabled, skipping PAT initialization too.
+[    0.000000] CPU MTRRs all blank - virtualized system.
+[    0.000000] x86/PAT: Configuration [0-7]: WB  WT  UC- UC  WB  WT  UC- UC  
+[    0.000000] found SMP MP-table at [mem 0x0009fc00-0x0009fc0f] mapped at [ffffffffff200c00]
+[    0.000000] Scanning 1 areas for low memory corruption
+[    0.000000] Using GB pages for direct mapping
+[    0.000000] No NUMA configuration found
+[    0.000000] Faking a node at [mem 0x0000000000000000-0x0000000007ffffff]
+[    0.000000] NODE_DATA(0) allocated [mem 0x07fde000-0x07ffffff]
+[    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000000] kvm-clock: cpu 0, msr 0:7fdc001, primary cpu clock
+[    0.000000] kvm-clock: using sched offset of 357694730 cycles
+[    0.000000] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.000000]   DMA32    [mem 0x0000000001000000-0x0000000007ffffff]
+[    0.000000]   Normal   empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.000000]   node   0: [mem 0x0000000000100000-0x0000000007ffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000000001000-0x0000000007ffffff]
+[    0.000000] Intel MultiProcessor Specification v1.4
+[    0.000000] MPTABLE: OEM ID: FC      
+[    0.000000] MPTABLE: Product ID: 000000000000
+[    0.000000] MPTABLE: APIC at: 0xFEE00000
+[    0.000000] Processor #0 (Bootup-CPU)
+[    0.000000] IOAPIC[0]: apic_id 2, version 17, address 0xfec00000, GSI 0-23
+[    0.000000] Processors: 1
+[    0.000000] smpboot: Allowing 1 CPUs, 0 hotplug CPUs
+[    0.000000] PM: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.000000] PM: Registered nosave memory: [mem 0x0009f000-0x0009ffff]
+[    0.000000] PM: Registered nosave memory: [mem 0x000a0000-0x000dffff]
+[    0.000000] PM: Registered nosave memory: [mem 0x000e0000-0x000fffff]
+[    0.000000] e820: [mem 0x08000000-0xffffffff] available for PCI devices
+[    0.000000] Booting paravirtualized kernel on KVM
+[    0.000000] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519600211568 ns
+[    0.000000] random: get_random_bytes called from start_kernel+0x94/0x486 with crng_init=0
+[    0.000000] setup_percpu: NR_CPUS:128 nr_cpumask_bits:128 nr_cpu_ids:1 nr_node_ids:1
+[    0.000000] percpu: Embedded 41 pages/cpu @ffff880007c00000 s128728 r8192 d31016 u2097152
+[    0.000000] KVM setup async PF for cpu 0
+[    0.000000] kvm-stealtime: cpu 0, msr 7c15040
+[    0.000000] PV qspinlock hash table entries: 256 (order: 0, 4096 bytes)
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 32137
+[    0.000000] Policy zone: DMA32
+[    0.000000] Kernel command line: console=ttyS0 reboot=k panic=1 pci=off root=/dev/vda rw virtio_mmio.device=4K@0xd0000000:5
+[    0.000000] PID hash table entries: 512 (order: 0, 4096 bytes)
+[    0.000000] Memory: 111064K/130680K available (8204K kernel code, 622K rwdata, 1464K rodata, 1268K init, 2820K bss, 19616K reserved, 0K cma-reserved)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] Kernel/User page tables isolation: enabled
+[    0.004000] Hierarchical RCU implementation.
+[    0.004000] 	RCU restricting CPUs from NR_CPUS=128 to nr_cpu_ids=1.
+[    0.004000] RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
+[    0.004000] NR_IRQS: 4352, nr_irqs: 48, preallocated irqs: 16
+[    0.004000] Console: colour dummy device 80x25
+[    0.004000] console [ttyS0] enabled
+[    0.004000] tsc: Detected 2194.918 MHz processor
+[    0.004000] Calibrating delay loop (skipped) preset value.. 4389.83 BogoMIPS (lpj=8779672)
+[    0.004000] pid_max: default: 32768 minimum: 301
+[    0.004000] Security Framework initialized
+[    0.004000] SELinux:  Initializing.
+[    0.004000] Dentry cache hash table entries: 16384 (order: 5, 131072 bytes)
+[    0.004146] Inode-cache hash table entries: 8192 (order: 4, 65536 bytes)
+[    0.005745] Mount-cache hash table entries: 512 (order: 0, 4096 bytes)
+[    0.006829] Mountpoint-cache hash table entries: 512 (order: 0, 4096 bytes)
+[    0.008741] CPU: Physical Processor ID: 0
+[    0.009650] Last level iTLB entries: 4KB 64, 2MB 8, 4MB 8
+[    0.010359] Last level dTLB entries: 4KB 64, 2MB 0, 4MB 0, 1GB 4
+[    0.011143] Spectre V2 : Mitigation: Full generic retpoline
+[    0.012006] Spectre V2 : Spectre v2 mitigation: Enabling Indirect Branch Prediction Barrier
+[    0.013313] Spectre V2 : Enabling Restricted Speculation for firmware calls
+[    0.014193] Speculative Store Bypass: Mitigation: Speculative Store Bypass disabled via prctl and seccomp
+[    0.029514] Freeing SMP alternatives memory: 28K
+[    0.031444] smpboot: Max logical packages: 1
+[    0.032341] x2apic enabled
+[    0.033049] Switched APIC routing to physical x2apic.
+[    0.035332] ..TIMER: vector=0x30 apic1=0 pin1=0 apic2=-1 pin2=-1
+[    0.036000] smpboot: CPU0: Intel(R) Xeon(R) Processor @ 2.20GHz (family: 0x6, model: 0x3d, stepping: 0x4)
+[    0.036000] Performance Events: unsupported p6 CPU model 61 no PMU driver, software events only.
+[    0.036000] Hierarchical SRCU implementation.
+[    0.036659] smp: Bringing up secondary CPUs ...
+[    0.037330] smp: Brought up 1 node, 1 CPU
+[    0.038283] smpboot: Total of 1 processors activated (4389.83 BogoMIPS)
+[    0.039715] devtmpfs: initialized
+[    0.040106] x86/mm: Memory block size: 128MB
+[    0.041102] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645041785100000 ns
+[    0.042665] futex hash table entries: 256 (order: 2, 16384 bytes)
+[    0.043886] NET: Registered protocol family 16
+[    0.044312] cpuidle: using governor ladder
+[    0.045128] cpuidle: using governor menu
+[    0.052740] HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.054177] HugeTLB registered 2.00 MiB page size, pre-allocated 0 pages
+[    0.055977] dmi: Firmware registration failed.
+[    0.056130] NetLabel: Initializing
+[    0.056801] NetLabel:  domain hash size = 128
+[    0.057655] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    0.058804] NetLabel:  unlabeled traffic allowed by default
+[    0.060000] clocksource: Switched to clocksource kvm-clock
+[    0.060000] VFS: Disk quotas dquot_6.6.0
+[    0.060000] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    0.060092] NET: Registered protocol family 2
+[    0.064316] TCP established hash table entries: 1024 (order: 1, 8192 bytes)
+[    0.065602] TCP bind hash table entries: 1024 (order: 2, 16384 bytes)
+[    0.066697] TCP: Hash tables configured (established 1024 bind 1024)
+[    0.067857] UDP hash table entries: 256 (order: 1, 8192 bytes)
+[    0.068865] UDP-Lite hash table entries: 256 (order: 1, 8192 bytes)
+[    0.069966] NET: Registered protocol family 1
+[    0.071673] virtio-mmio: Registering device virtio-mmio.0 at 0xd0000000-0xd0000fff, IRQ 5.
+[    0.073123] platform rtc_cmos: registered platform RTC device (no PNP device found)
+[    0.074660] Scanning for low memory corruption every 60 seconds
+[    0.075860] audit: initializing netlink subsys (disabled)
+[    0.077308] Initialise system trusted keyrings
+[    0.078224] Key type blacklist registered
+[    0.079414] audit: type=2000 audit(1754655266.297:1): state=initialized audit_enabled=0 res=1
+[    0.081438] workingset: timestamp_bits=36 max_order=15 bucket_order=0
+[    0.084447] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    0.088216] Key type asymmetric registered
+[    0.089034] Asymmetric key parser 'x509' registered
+[    0.090103] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 254)
+[    0.091632] io scheduler noop registered (default)
+[    0.092652] io scheduler cfq registered
+[    0.093521] virtio-mmio virtio-mmio.0: Failed to enable 64-bit or 32-bit DMA.  Trying to continue, but this might not work.
+[    0.096038] Serial: 8250/16550 driver, 1 ports, IRQ sharing disabled
+[    0.119093] serial8250: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a U6_16550A
+[    0.123006] loop: module loaded
+[    0.124471] tun: Universal TUN/TAP device driver, 1.6
+[    0.125581] hidraw: raw HID events driver (C) Jiri Kosina
+[    0.126725] nf_conntrack version 0.5.0 (1024 buckets, 4096 max)
+[    0.128378] ip_tables: (C) 2000-2006 Netfilter Core Team
+[    0.129804] Initializing XFRM netlink socket
+[    0.131020] NET: Registered protocol family 10
+[    0.132975] Segment Routing with IPv6
+[    0.133763] NET: Registered protocol family 17
+[    0.134580] Bridge firewalling registered
+[    0.135317] sched_clock: Marking stable (132015393, 0)->(218819548, -86804155)
+[    0.136801] registered taskstats version 1
+[    0.137495] Loading compiled-in X.509 certificates
+[    0.139137] Loaded X.509 cert 'Build time autogenerated kernel key: 3472798b31ba23b86c1c5c7236c9c91723ae5ee9'
+[    0.140876] zswap: default zpool zbud not available
+[    0.141700] zswap: pool creation failed
+[    0.142490] Key type encrypted registered
+[    0.186327] EXT4-fs (vda): recovery complete
+[    0.187368] EXT4-fs (vda): mounted filesystem with ordered data mode. Opts: (null)
+[    0.188884] VFS: Mounted root (ext4 filesystem) on device 254:0.
+[    0.199130] devtmpfs: mounted
+[    0.201311] Freeing unused kernel memory: 1268K
+[    0.212091] Write protecting the kernel read-only data: 12288k
+[    0.214530] Freeing unused kernel memory: 2016K
+[    0.217310] Freeing unused kernel memory: 584K
+OpenRC init version 0.35.5.87b1ff59c1 starting
+Starting sysinit runlevel
+
+   OpenRC 0.35.5.87b1ff59c1 is starting up Linux 4.14.55-84.37.amzn2.x86_64 (x86_64)
+
+ * Mounting /proc ...
+ [ ok ]
+ * Mounting /run ...
+ * /run/openrc: creating directory
+ * /run/lock: creating directory
+ * /run/lock: correcting owner
+ * Caching service dependencies ...
+Service `hwdrivers' needs non existent service `dev'
+ [ ok ]
+Starting boot runlevel
+ * Remounting devtmpfs on /dev ...
+ [ ok ]
+ * Mounting /dev/mqueue ...
+ [ ok ]
+ * Mounting /dev/pts ...
+ [ ok ]
+ * Mounting /dev/shm ...
+ [ ok ]
+ * Setting hostname ...
+ [ ok ]
+ * Checking local filesystems  ...
+ [ ok ]
+ * Remounting filesystems ...
+ [ ok ]
+ * Mounting local filesystems ...
+ [ ok ]
+[    0.555106] random: fast init done
+ * Loading modules ...
+modprobe: can't change directory to '/lib/modules': No such file or directory
+modprobe: can't change directory to '/lib/modules': No such file or directory
+ [ ok ]
+ * Mounting misc binary format filesystem ...
+ [ ok ]
+ * Mounting /sys ...
+ [ ok ]
+ * Mounting security filesystem ...
+ [ ok ]
+ * Mounting debug filesystem ...
+ [ ok ]
+ * Mounting SELinux filesystem ...
+ [ ok ]
+ * Mounting persistent storage (pstore) filesystem ...
+ [ ok ]
+Starting default runlevel
+[    1.088074] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x1fa37202099, max_idle_ns: 440795206796 ns
+
+Welcome to Alpine Linux 3.8
+Kernel 4.14.55-84.37.amzn2.x86_64 on an x86_64 (ttyS0)
+
+localhost login: root
+Password: 
+Welcome to Alpine!
+
+The Alpine Wiki contains a large amount of how-to guides and general
+information about administrating Alpine systems.
+See <http://wiki.alpinelinux.org>.
+
+You can setup the system with the command: setup-alpine
+
+You may change this message by editing /etc/motd.
+
+login[856]: root login on 'ttyS0'
+localhost:~# 
+</pre></p>
+<p>Akun default:</p>
+<p><pre>
+user: root
+pass: root
+</pre></p>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

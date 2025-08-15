@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Bikin hidden service (tor) <code>.onion</code> di FreeBSD</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<h3>Instalasi Tor</h3>
+<p>Via <code>pkg</code> (binary package)</p>
+<p><pre>sudo pkg install tor</pre></p>
+<h3>Konfigurasi hidden service</h3>
+<p><pre>sudo nano /usr/local/etc/tor/torrc</pre></p>
+<p>Tambahkan baris berikut di akhir file:</p>
+<p><pre>
+HiddenServiceDir /usr/local/etc/tor/hidden_service/
+HiddenServicePort 80 127.0.0.1:8080
+</pre></p>
+<h3>Bikin direktori hidden service</h3>
+<p><pre>
+sudo mkdir -p /usr/local/etc/tor/hidden_service
+sudo chown -R _tor:_tor /usr/local/etc/tor/hidden_service
+</pre></p>
+<h3>Aktifin dan jalanin tor</h3>
+<h4>Aktifin tor pas boot:</h4>
+<p><pre>sudo sysrc tor_enable=YES</pre></p>
+<h4>Jalanin tor:</h4>
+<p><pre>sudo service tor start</pre></p>
+<h3>Dapetin alamat <code>.onion</code></h3>
+<p><pre>sudo cat /usr/local/etc/tor/hidden_service/hostname</pre></p>
+<p>Contoh output:</p>
+<p><code>v3exampleonion234567890abcde1234567890abcdef1234567890abcdef.onion</code></p>
+<h3>Konfigurasi apache</h3>
+<p>Edit file <code>/usr/local/etc/apache24/httpd.conf</code></p>
+<p>Tambahin ini <code>Listen 127.0.0.1:8080</code> dibawah <code>Listen 80</code>
+<p>Contoh:</p>
+<p><pre>
+Listen 80
+Listen 127.0.0.1:8080
+</pre></p>
+<p>Di save terus restart apache</p>
+<p>sudo service apache24 restart</p>
+
+
+<h3>Masalah permission</h3>
+<p>Misal dapet error kaya gini pas coba start tor</p>
+<p><pre>
+Starting tor.
+Jun 03 12:58:22.526 [notice] Tor 0.4.8.16 running on FreeBSD with Libevent 2.1.12-stable, OpenSSL 3.0.13, Zlib 1.3.1, Liblzma 5.4.5, Libzstd 1.5.6 and BSD 1402000 as libc.
+Jun 03 12:58:22.526 [notice] Tor can't help you if you use it wrong! Learn how to be safe at https://support.torproject.org/faq/staying-anonymous/
+Jun 03 12:58:22.527 [notice] Read configuration file "/usr/local/etc/tor/torrc".
+Jun 03 12:58:22.529 [warn] /usr/local/etc/tor/hidden_service/ is not owned by this user (_tor, 256) but by root (0). Perhaps you are running Tor as the wrong user?
+Jun 03 12:58:22.530 [warn] Failed to parse/validate config: Failed to configure rendezvous options. See logs for details.
+Jun 03 12:58:22.530 [err] Reading config failed--see warnings above.
+/usr/local/etc/rc.d/tor: WARNING: failed to start tor
+</pre></p>
+<p>Caranya:</p>
+<p><pre>sudo chown -R _tor:_tor /usr/local/etc/tor/hidden_service/</pre></p>
+<p>Kemudian pastikan permission-nya aman (minimal readable & writable oleh <code>_tor</code> saja)</p>
+<p><pre>sudo chmod 700 /usr/local/etc/tor/hidden_service/</pre></p>
+<h3>Restart tor</h3>
+<p><pre>sudo service tor restart</pre></p>
+<p>Kalo berhasil kek gini:</p>
+<p><pre>
+Starting tor.
+Jun 03 12:59:15.152 [notice] Tor 0.4.8.16 running on FreeBSD with Libevent 2.1.12-stable, OpenSSL 3.0.13, Zlib 1.3.1, Liblzma 5.4.5, Libzstd 1.5.6 and BSD 1402000 as libc.
+Jun 03 12:59:15.152 [notice] Tor can't help you if you use it wrong! Learn how to be safe at https://support.torproject.org/faq/staying-anonymous/
+Jun 03 12:59:15.152 [notice] Read configuration file "/usr/local/etc/tor/torrc".
+Jun 03 12:59:15.163 [notice] Opening Socks listener on 127.0.0.1:9050
+Jun 03 12:59:15.163 [notice] Opened Socks listener connection (ready) on 127.0.0.1:9050
+Jun 03 12:59:15.163 [warn] Fixing permissions on directory /var/db/tor
+</pre></p>
+<p>Hasilnya:</p>
+<p><img src="../../img/contoh-hidden-service.png"/></p>
+<h3>Install tor browser di client, misal ubuntu</h3>
+<p><pre>
+sudo add-apt-repository universe
+sudo apt install torbrowser-launcher
+</pre></p>
+<p>Run</p>
+<p><pre>torbrowser-launcher</pre></p>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

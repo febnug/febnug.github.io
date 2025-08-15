@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Meng-koneksikan client PPTP VPN server di Linux</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Disini saya menggunakan OS Linux Debian sebagai clientnya, install dulu network manager pptp dengan mengetikan perintah, <code>apt-get install pptp-linux network-manager-pptp</code></p>
+    <p>Selanjutnya kita buat file konfigurasinya :
+      <ul>
+        <li>File CHAP secret (<code>/etc/ppp/chap-secrets</code>), file ini buat autentikasi si user untuk masuk ke channel VPNnya</li>
+        <li>File konfigurasi koneksi VPN (<code>/etc/ppp/peers/vpnname</code>), file ini untuk yang berhubungan dengan info koneksi VPNnya, misalnya kaya encryptionnya, dll, disini <b>vpnname</b> itu bisa di ganti apa aja misal <code>pptp-fn</code></li>
+      </ul>
+    </p>
+    <p>Jika ingin konek ke VPN server kita, data yang di perlukan adalah :
+    <ul>
+      <li><b>Nama PPTP server</b>, misal <code>mikrotik.fnlqxz.my.id</code></li>
+      <li><b>PPTP username</b>, misal <code>fn</code></li>
+      <li><b>PPTP password</b>, misal <code><i>password</i></code></li>
+    </ul>
+  </p>
+  <p>Langkah-langkahnya :</p>
+  <ol>
+    <li>Edit file CHAP secret :
+      <p><pre>root@server:~# nano /etc/ppp/chap-secrets</pre></p>
+      <p>Template syntaxnya kaya gini :</p>
+      <p><pre>DOMAIN\\username      PPTP      password     *</pre></p>
+      <p>Isi sesuai kebutuhan, misal :</p>
+      <p><pre>mikrotik.fnlqxz.my.id      PPTP      password     *</pre>
+        <b>catatan:</b> <code>password</code> isi dengan password kamu
+      </p>
+      <p>Di save <code>Ctrl + x + y</code> lalu <code>Enter</code></p>
+    </li>
+    <li>Buat file yang isinya data konfigurasi tunnel (dimana nama <code>pptp-fn</code>) di gunakan untuk konek ke VPNnya
+      <p><pre>root@server:~# nano /etc/ppp/peers/pptp-fn</pre></p>
+      <p>Isi dengan :</p>
+      <p><pre>
+pty "pptp mikrotik.fnlqxz.my.id --nolaunchpppd"
+name fn
+remotename PPTP
+require-mppe-128
+file /etc/ppp/options.pptp
+ipparam pptp-fm
+</pre></p>
+<p>Di save <code>Ctrl + x + y</code></p>
+    </li>
+    <li>Terakhir, kamu perlu me-route semua trafiknya melalui interface VPN, maka perlu menambahkan routing table.
+      <p>Buat filenya :</p>
+      <p><pre>root@server:~# nano /etc/ppp/ip-up.d/vpn-traffic</pre></p>
+      <p>Isi filenya :</p>
+      <p>
+        <pre>
+#!/bin/bash
+route add -net 10.0.0.0/8 dev ppp0
+</pre></p>
+  <p>Di save <code>Ctrl + x + y</code></p>
+  <p>Bikin filenya jadi executable :</p>
+  <p><pre>root@server:~# chmod +x /etc/ppp/ip-up.d/vpn-traffic</pre></p>
+    </li>
+    <li>Sekarang kamu siap konek ke encrypted tunnel
+      <p><pre>root@server:~# pppd call pptp-fn</pre></p>
+    </li>
+    <li>
+      Untuk men-diskonek, caranya cukup melakukan kill processnya saja, pake perintah <code>ps -aux | grep pppd</code>, kill dengan <code>kill -9 angka_PID</code>
+      <p>Contoh :</p>
+      <p><pre>
+root@server:~# ps -aux | grep pppd
+root      104368  0.0  0.1  11316  3336 ?        Ss   Jan05   0:00 pppd call pptp-fn
+root      104369  0.0  0.0   2420   464 ?        S    Jan05   0:00 sh -c pptp mikrotik.fnlqxz.my.id --nolaunchpppd
+root      104372  0.0  0.0   2628  1840 ?        S    Jan05   1:50 pptp mikrotik.fnlqxz.my.id --nolaunchpppd
+root      104385  0.0  0.0   2628   164 ?        S    Jan05   0:00 pptp mikrotik.fnlqxz.my.id --nolaunchpppd
+root      183699  0.0  0.0   6240   652 pts/2    S+   10:24   0:00 grep pppd
+root@server:~#
+</pre></p>
+<p>Berarti kill yang PIDnya <code>104368</code>, <code>kill -9 104368</code></p>
+    </li>
+  </ol>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

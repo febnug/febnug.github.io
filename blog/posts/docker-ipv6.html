@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Docker IPv6? Kenapa?</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<h3><code>docker-compose.yml</code></h3>
+<p><pre>version: "3.7"
+
+networks:
+  v6net:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: "fd00:dead:beef::/64"
+
+services:
+  c1:
+    image: alpine
+    command: sh -c "sleep infinity"
+    networks:
+      v6net:
+        ipv6_address: "fd00:dead:beef::11"
+
+  c2:
+    image: alpine
+    command: sh -c "sleep infinity"
+    networks:
+      v6net:
+        ipv6_address: "fd00:dead:beef::22"</pre></p>
+<h3>Fire up!</h3>
+<p><pre>docker-compose up -d</pre></p>
+<h3>v6</h3>
+<p><pre>user@ubuntu:~/ipv6-docker$ sudo docker ps -a
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS     NAMES
+3c4921dc59b3   alpine    "sh -c 'sleep infini…"   16 minutes ago   Up 16 minutes             ipv6-docker_c2_1
+38169415e059   alpine    "sh -c 'sleep infini…"   16 minutes ago   Up 16 minutes             ipv6-docker_c1_1</pre></p>
+<h3>Pinging the deadbeef</h3>
+<p><pre>user@ubuntu:~/ipv6-docker$ sudo docker exec ipv6-docker_c2_1 ping6 fd00:dead:beef::22
+PING fd00:dead:beef::22 (fd00:dead:beef::22): 56 data bytes
+64 bytes from fd00:dead:beef::22: seq=0 ttl=64 time=0.063 ms
+64 bytes from fd00:dead:beef::22: seq=1 ttl=64 time=0.061 ms
+64 bytes from fd00:dead:beef::22: seq=2 ttl=64 time=0.060 ms
+64 bytes from fd00:dead:beef::22: seq=3 ttl=64 time=0.180 ms
+64 bytes from fd00:dead:beef::22: seq=4 ttl=64 time=0.068 ms
+64 bytes from fd00:dead:beef::22: seq=5 ttl=64 time=0.158 ms
+^Ccontext canceled
+user@ubuntu:~/ipv6-docker$</pre></p>
+<h3>Akses keluar!</h3>
+<h4>Cek dulu</h4>
+<p><pre>user@ubuntu:~/ipv6-docker$ ip -6 route | grep default
+default via fe80::1 dev wlp6s0 proto ra metric 20600 pref medium</pre></p>
+<p><pre>user@ubuntu:~/ipv6-docker$ sudo docker network inspect ipv6-docker_v6net | grep Subnet
+                    "Subnet": "fd00:dead:beef::/64"
+                    "Subnet": "172.18.0.0/16",
+</pre></p>
+<h4>Enable IPv6 forwarding</h4>
+<p><pre>user@ubuntu:~/ipv6-docker$ sudo sysctl -w net.ipv6.conf.all.forwarding=1
+net.ipv6.conf.all.forwarding = 1</pre></p>
+<h4>Pasang NAT66 pakai ip6tables</h4>
+<p><pre>sudo ip6tables -t nat -A POSTROUTING -s fd00:dead:beef::/64 -o wlp6s0 -j MASQUERADE
+</pre></p>
+<p><code>-o wlp6s0</code> sesuai interface default kamu (Wi-Fi di kasus ini)<b></b></p>
+<h3>Uji coba</h3>
+<p><pre>
+user@ubuntu:~/ipv6-docker$ sudo ip6tables -t nat -A POSTROUTING -s fd00:dead:beef::/64 -o wlp6s0 -j MASQUERADE
+user@ubuntu:~/ipv6-docker$ sudo docker exec ipv6-docker_c2_1 ping6 google.com
+PING google.com (2001:4860:4802:32::78): 56 data bytes
+64 bytes from 2001:4860:4802:32::78: seq=0 ttl=114 time=20.456 ms
+64 bytes from 2001:4860:4802:32::78: seq=1 ttl=114 time=18.955 ms
+64 bytes from 2001:4860:4802:32::78: seq=2 ttl=114 time=22.105 ms
+64 bytes from 2001:4860:4802:32::78: seq=3 ttl=114 time=22.784 ms
+64 bytes from 2001:4860:4802:32::78: seq=4 ttl=114 time=20.783 ms
+64 bytes from 2001:4860:4802:32::78: seq=5 ttl=114 time=27.623 ms
+^Ccontext canceled
+user@ubuntu:~/ipv6-docker$
+</pre></p>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

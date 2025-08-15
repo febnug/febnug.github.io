@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" type="image/x-icon" href="../../asset/skull.ico">
+<meta name="viewport" content="width=device-width, initial-scale=1.0,
+maximum-scale=1.0">
+
+<script>
+    // Music player Start and Stop:
+    // Play and Stop unicode characters:
+    var PLAY_STR = "int"
+    var STOP_STR = "hlt"
+
+	function change_music_state() {
+        // Toggle the state of the player.
+        // We keep state using the character text inside the Anchor.
+        current_state_char = document.getElementById("player_cont").innerHTML;
+        if (current_state_char == PLAY_STR) {
+            document.getElementById('player').play()
+            document.getElementById("player_cont").innerHTML = STOP_STR
+        } else {
+            document.getElementById('player').pause()
+            document.getElementById("player_cont").innerHTML = PLAY_STR
+        }
+	}
+
+
+    function trackConv(google_conversion_id,google_conversion_label) {
+             var image = new Image(1,1); 
+             image.src = "http://www.googleadservices.com/pagead/conversion/" + 
+                 google_conversion_id + "/?label=" + google_conversion_label +"&script=0";  
+    } 
+</script>
+
+<style>
+
+html,body {
+    font-family: "Courier New", Courier, monospace;
+    height: 95%;
+    background: #050505;
+}
+
+#player_cont {
+    font-family: "Courier New", Courier, monospace;
+    text-decoration: none;
+}
+
+#snip_content_cell {
+    text-decoration: none;
+    text-align: left;
+    vertical-align: middle;
+    color: #ffffff;
+    width: 30em;
+    height: 97%;
+}
+
+
+.snip_link {
+    /* text-decoration: none; */
+    color: #ffffff;
+    font-size:1.0em;
+}
+
+.buy_link {
+    color:#ffffff;
+    font-size:1.0em;
+}
+
+#snip_index_cell {
+    text-align: center;
+    vertical-align:top;
+    height:4em; color: #eeeeee;
+}
+#next_cell,#prev_cell {
+    text-align: center;
+    vertical-align:top;
+}
+
+#play_cont_cell, #return_cell,#share_cell {
+    text-align: center;
+    vertical-align:top;
+    width: 33%;
+    white-space: nowrap;
+}
+
+#xchg_rax {
+    text-align: center;
+    vertical-align:top;
+    white-space: nowrap;
+    color:#eeeeee;
+}
+
+#play_cont_cell {
+    text-align: center;
+    white-space: nowrap;
+    color:#eeeeee;
+}
+
+
+#lower_table {
+    height: 97%;
+}
+
+#lower_links_table {
+    width: 97%;
+}
+
+#upper_table {
+    height: 5%;
+}
+
+#lower_menu_cell {
+    text-align: center;
+}
+
+#contact_cell {
+    color: #333333;
+    text-align: center;
+
+}
+
+#buy_comment {
+    color:#eeeeee;
+    text-align:center;
+    background-color:#222222;
+    padding:0.8em;
+}
+
+a:hover {
+    color: #10ff10;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+pre {
+    font-size: 1.2em;
+}
+
+.menu_link {
+/* .link_next_prev,.return_link { */
+    color: #8f8f8f;
+    font-size:1.0em;
+    /* text-decoration:none; */
+}
+
+.link_disabled {
+    color: #262626;
+    font-size:1.0em;
+    /* visibility:hidden; */
+}
+</style>
+
+	<meta charset="utf-8">
+	<title>fnlqxz</title>
+</head>
+<body>
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-52347450-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<div id="buy_comment">; Baca writeup-nya <a class="buy_link"
+href="">di sini</a> </div><br />
+<table id="lower_table">
+    <tr>
+        <td id="snip_index_cell" colspan="3">
+            [0x00]
+        </td>
+    </tr>
+    <tr>
+        <td id="prev_cell">
+            
+        <div class="link_disabled">dec</div>
+
+        </td>
+        <td id="xchg_rax">
+		[xchg rax,rax]
+        </td>
+        <td id="next_cell">
+            
+        <a class ="menu_link" href="/">inc</a>
+
+        </td>
+    </tr>
+
+    <tr>
+
+      <td colspan="3" id="snip_content_cell">
+      <table><tr><td>
+      <pre>.loop:
+    bsf      rcx,rax
+    shr      rax,cl
+    cmp      rax,1
+    je       .exit_loop
+    lea      rax,[rax + 2*rax + 1]
+    jmp      .loop
+.exit_loop:
+
+</pre>
+      </td></tr></table>
+      </td>
+
+    </tr>
+    <tr>
+        <td colspan="3" id="lower_menu_cell">
+        <table id="lower_links_table"><tr>
+            <td id="share_cell">
+                
+
+    <a class="menu_link"
+    href="https://facebook.com/fnlqxz" target="_blank">shl</a>
+
+
+                
+    <a href="https://x.com/febnug"
+    target="_blank" class="menu_link">shr</a>
+
+            </td>
+            </td>
+            <td id="play_cont_cell">
+            <a class = "menu_link" title="BRD - Teleport Prokg" id="player_cont" href=""
+                onclick="change_music_state(); return false;">int</a>
+            </td>
+            <td id="return_cell">
+                <a class="menu_link" href="https://fnlqxz.my.id">fnlqxz</a>
+            </td>
+        </tr></table>
+        </td>
+    </tr>
+    <tr>
+      <td colspan="3" id="contact_cell">; febnug</td>
+    </tr>
+</table>
+<audio id="player" src="../../asset/BRD_Teleport_Prokg.mp3"></audio>
+
+
+</body>
+</html>

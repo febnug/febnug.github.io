@@ -1,0 +1,78 @@
+; a boring linux x86 elf entry from me for bggp5 :)
+; -- febnug
+; ---------------------------------------------------
+; build command :
+; nasm -f bin -o bggp5 bggp5.asm
+; chmod +x bggp5
+
+BITS 32
+  
+                org     0x08048000
+  
+  ehdr:                                                 ; Elf32_Ehdr
+                db      0x7F, "ELF", 1, 1, 1, 0         ;   e_ident
+        times 8 db      0
+                dw      2                               ;   e_type
+                dw      3                               ;   e_machine
+                dd      1                               ;   e_version
+                dd      _start                          ;   e_entry
+                dd      phdr - $$                       ;   e_phoff
+                dd      0                               ;   e_shoff
+                dd      0                               ;   e_flags
+                dw      ehdrsize                        ;   e_ehsize
+                dw      phdrsize                        ;   e_phentsize
+                dw      1                               ;   e_phnum
+                dw      0                               ;   e_shentsize
+                dw      0                               ;   e_shnum
+                dw      0                               ;   e_shstrndx
+  
+  ehdrsize      equ     $ - ehdr
+  
+  phdr:                                                 ; Elf32_Phdr
+                dd      1                               ;   p_type
+                dd      0                               ;   p_offset
+                dd      $$                              ;   p_vaddr
+                dd      $$                              ;   p_paddr
+                dd      filesize                        ;   p_filesz
+                dd      filesize                        ;   p_memsz
+                dd      5                               ;   p_flags
+                dd      0x1000                          ;   p_align
+  
+  phdrsize      equ     $ - phdr
+  
+_start:
+  
+jmp     short x             ; This instruction jumps to the label x, skipping over the code between this point and x. 
+                            ; This is a common technique to avoid executing certain parts of code directly.
+y:
+pop     edi                 ; Pops a value from the stack into the edi register.
+push    byte +0xb           ; Pushes the value 0xb (which is 11 in decimal) onto the stack.
+pop     eax                 ; Pops the top of the stack into the eax register. Now, eax contains the value 11.
+cdq                         ; Converts the value in eax to a 64-bit integer in edx:eax. This is often used for division operations but here it's just setting up the stack.
+push    edx                 ; Pushes the value of edx onto the stack.
+push    word 0x632d         ; Pushes the word 0x632d (the ASCII characters c-) onto the stack.
+mov     esi, esp            ; Moves the stack pointer (esp) into the esi register. This is used to later set up the arguments for a system call.
+push    edx                 ; Pushes the value of edx again onto the stack.
+push    dword 0x68732f2f    ; Pushes the value 0x68732f2f (which corresponds to the ASCII string hs//) onto the stack.
+push    dword 0x6e69622f    ; Pushes the value 0x6e69622f (which corresponds to the ASCII string nib/) onto the stack.
+mov     ebx, esp            ; Moves the stack pointer into the ebx register. ebx now points to the string /bin/sh on the stack.
+push    edx                 ; Pushes the value of edx again onto the stack.
+push    edi                 ; Pushes the value of edi onto the stack.
+push    esi                 ; Pushes the value of esi onto the stack.
+push    ebx                 ; Pushes the value of ebx (which is a pointer to /bin/sh) onto the stack.
+mov     ecx, esp            ; Moves the stack pointer into ecx. ecx now points to the array of arguments for the system call.
+int     0x80                ; Executes the interrupt for a system call in Linux. The eax register holds the system call number (11 for execve), 
+                            ; ebx points to the filename, ecx points to the arguments, and edx is usually for environment pointers (but here it's ignored).
+x:                          ;
+call    y                   ; This is a label that causes the code to call the y label, creating a loop where y is executed.
+str: db "curl -L https://binary.golf/5/5; exit;" ; This is a null-terminated string stored in the .data section. It contains the command curl -L https://binary.golf/5/5; exit;.
+  
+filesize      equ     $ - $$
+
+; the shellcode version, 78 bytes :
+; "\xeb\x21\x5f\x6a\x0b\x58\x99\x52\x66\x68\x2d\x63\x89\xe6\x52"
+; "\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x52\x57\x56"
+; "\x53\x89\xe1\xcd\x80\xe8\xda\xff\xff\xff\x63\x75\x72\x6c\x20"
+; "\x2d\x4c\x20\x68\x74\x74\x70\x73\x3a\x2f\x2f\x62\x69\x6e\x61"
+; "\x72\x79\x2e\x67\x6f\x6c\x66\x2f\x35\x2f\x35\x3b\x20\x65\x78"
+; "\x69\x74\x3b"

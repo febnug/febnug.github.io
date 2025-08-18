@@ -121,8 +121,8 @@ color:black;
 
   <div class="post-content e-content" itemprop="articleBody">
 <p>Error:</p>
-    <p><code>VirtualBox can't operate in VMX root mode. Please disable the KVM kernel extension, recompile your kernel and reboot (VERR_VMX_IN_VMX_ROOT_MODE)
-</code></p>
+    <p><pre>VirtualBox can't operate in VMX root mode. Please disable the KVM kernel extension, recompile your kernel and reboot (VERR_VMX_IN_VMX_ROOT_MODE)
+    </pre></p>
 <p>artinya VirtualBox mendeteksi bahwa KVM (Kernel-based Virtual Machine) di Linux sedang aktif dan sudah “memegang” hardware virtualization (VMX), jadi VirtualBox tidak bisa memakainya.</p>
 <p>Masalah ini umum terjadi kalau:</p>
 <p><ol>

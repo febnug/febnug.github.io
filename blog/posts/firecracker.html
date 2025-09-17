@@ -120,11 +120,25 @@ color:black;
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
+    <h3>Install firecracker</h3>
+    <pre>
+curl -LOJ https://github.com/firecracker-microvm/firecracker/releases/download/v1.5.1/firecracker-v1.5.1-x86_64.tgz
+tar xzf firecracker-v1.5.1-x86_64.tgz
+cd firecracker-v1.5.1-x86_64
+chmod +x firecracker-v1.5.1-x86_64
+sudo mv firecracker-v1.5.1-x86_64 /usr/local/bin/firecracker
+    </pre>
+<p>Note: bisa versi lain, cek secara berkala di websitenya atau repositori githubnya</p>
 <p>Oke, kita mulai tutorial Firecracker MicroVM dari nol dengan asumsi kamu sudah punya:</p>
 <ul>
 <li>hello-vmlinux.bin → kernel ELF uncompressed</li>
 <li>hello-rootfs.ext4 → root filesystem minimal</li>
 </ul>
+<p>Download dulu contoh VMnya</p>
+<pre>
+wget https://s3.amazonaws.com/spec.ccfc.min/img/hello/kernel/hello-vmlinux.bin
+wget https://s3.amazonaws.com/spec.ccfc.min/img/hello/fsfiles/hello-rootfs.ext4
+</pre>
 <p>Kita jalankan step-by-step sampai microVM boot ke shell.</p>
 <h3>1. Jalankan Firecracker</h3>
 <p>Bersihkan socket lama lalu jalankan Firecracker:</p>

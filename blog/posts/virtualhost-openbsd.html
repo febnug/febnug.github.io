@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+  :root{
+    --bg:#f6f8fa;
+    --panel:#ffffff;
+    --muted:#6b7280;
+    --accent:#0b69ff;
+    --code-bg: #0f1724;
+    --code-fg: #e6edf3;
+    --radius:12px;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  }
+
+  /* dark theme override (prefers-color-scheme) */
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0b0f14;
+      --panel:#071018;
+      --muted:#9aa4b2;
+      --accent:#4ea8ff;
+      --code-bg: #071022;
+      --code-fg: #dbe9ff;
+    }
+  }
+  .snippet {
+    max-width:900px;
+    margin:0 auto 24px;
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow: 0 6px 20px rgba(2,6,23,0.08);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)), var(--panel);
+  }
+
+  .snippet .toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:10px 12px;
+    border-bottom:1px solid rgba(0,0,0,0.04);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01));
+  }
+
+  .snippet .meta{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    font-size:13px;
+    color:var(--muted);
+  }
+
+  .lang-pill{
+    background:rgba(11,105,255,0.06);
+    color:var(--accent);
+    padding:4px 8px;
+    border-radius:999px;
+    font-weight:600;
+    font-size:12px;
+  }
+
+  .controls{
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  .btn{
+    background:transparent;
+    border:1px solid rgba(0,0,0,0.06);
+    padding:6px 10px;
+    border-radius:8px;
+    font-size:13px;
+    cursor:pointer;
+    display:inline-flex;
+    gap:8px;
+    align-items:center;
+    user-select:none;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn.ghost{ border: none; background: transparent; color: var(--muted); }
+
+  /* code area */
+  .code-wrap{
+    display:block;
+    font-family:var(--mono);
+    font-size:13px;
+    line-height:1.5;
+    background:var(--code-bg);
+    color:var(--code-fg);
+    padding:12px;
+    overflow:auto;
+  }
+
+  /* ol-based lines */
+  .code {
+    margin:0;
+    padding:0;
+  }
+  .code ol{
+    list-style:none;
+    margin:0;
+    padding:0 12px;
+    counter-reset: linenumber;
+    display:table; /* keeps line numbers and content aligned nicely */
+    width:100%;
+  }
+  .code li{
+    display:table-row;
+    white-space:pre;
+  }
+  .code li::before{
+    content: counter(linenumber);
+    counter-increment: linenumber;
+    display:table-cell;
+    text-align:right;
+    padding-right:12px;
+    user-select:none;
+    opacity:0.55;
+    width:56px;
+    font-size:12px;
+    color: rgba(255,255,255,0.55);
+  }
+  .code li > .ln {
+    display:table-cell;
+    width:100%;
+  }
+
+  /* highlighted lines */
+  .code li.highlight{
+    background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  }
+
+  /* selection styling inside code */
+  .code ::selection{ background: rgba(255,255,255,0.12); }
+  .code ::-moz-selection{ background: rgba(255,255,255,0.12); }
+
+  /* small screens */
+  @media (max-width:520px){
+    .snippet .meta{ font-size:12px; gap:6px; }
+    .code li::before{ width:40px; font-size:11px; padding-right:8px; }
+    .btn{ padding:6px 8px; font-size:12px; }
+  }
+  
+  
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Bikin VirtualHost di OpenBSD</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<p>By default, webserver di OpenBSD sudah terinstall, yaitu <code>httpd</code>, jadi langsung ngonfig aja</p>
+<h3>Edit <code>/etc/httpd.conf</code></h3>
+<p>Edit, terus isi kek gini:</p>
+  <div class="snippet" data-highlight="2,5-6">
+  <div class="toolbar">
+    <div class="meta">
+      <span class="lang-pill">config</span>
+      <span class="file-name">httpd.conf</span>
+    </div>
+    <div class="controls">
+      <button class="btn copy-btn" title="Copy code">Copy</button>
+      <button class="btn ghost run-btn" title="Open in new tab">Open</button>
+    </div>
+  </div>
+
+  <!-- tulis kode di dalam elemen <code>. Bisa multi-baris. -->
+  <div class="code-wrap">
+    <pre><code class="raw">
+erver "example.com" {
+    listen on * port 80
+    root "/htdocs/example"
+    directory index "index.html"
+}
+    </code></pre>
+  </div>
+</div>
+
+<script>
+/* Script simpel untuk:
+   - Mengubah <pre><code> jadi <ol><li> ... </li></ol> agar ada line numbers
+   - Tombol Copy
+   - Tombol Open membuka isi code di tab baru (berguna untuk skrip)
+   - Mendukung atribut data-highlight pada .snippet, format: "2,4-6"
+*/
+(function () {
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function parseRanges(str){
+    if(!str) return new Set();
+    const set = new Set();
+    str.split(',').map(x=>x.trim()).forEach(part=>{
+      if(part.includes('-')){
+        let [a,b] = part.split('-').map(Number);
+        if(!isNaN(a) && !isNaN(b) && b>=a){
+          for(let i=a;i<=b;i++) set.add(i);
+        }
+      } else {
+        const n = Number(part);
+        if(!isNaN(n)) set.add(n);
+      }
+    });
+    return set;
+  }
+
+  document.querySelectorAll('.snippet').forEach(snip=>{
+    const codeEl = snip.querySelector('pre > code');
+    if(!codeEl) return;
+    const raw = codeEl.textContent.replace(/^\n/,'').replace(/\s+$/,'');
+    const lines = raw.split(/\r?\n/);
+    const ol = document.createElement('ol');
+    const hl = parseRanges(snip.getAttribute('data-highlight'));
+    lines.forEach((ln, idx)=>{
+      const li = document.createElement('li');
+      if(hl.has(idx+1)) li.classList.add('highlight');
+      const span = document.createElement('span');
+      span.className = 'ln';
+      // preserve spaces at line start by replacing leading spaces with &nbsp;
+      const escaped = escapeHtml(ln).replace(/^(\s+)/, (m)=>m.replace(/ /g,'\u00a0'));
+      span.innerHTML = escaped || '\u200B'; // keep empty line height
+      li.appendChild(span);
+      ol.appendChild(li);
+    });
+    const codeWrap = snip.querySelector('.code-wrap');
+    // clear and insert structured code
+    codeWrap.innerHTML = '';
+    const container = document.createElement('div');
+    container.className = 'code';
+    container.appendChild(ol);
+    codeWrap.appendChild(container);
+
+    // copy button
+    const copyBtn = snip.querySelector('.copy-btn');
+    if(copyBtn){
+      copyBtn.addEventListener('click', async ()=>{
+        try{
+          await navigator.clipboard.writeText(raw);
+          copyBtn.textContent = 'Copied ✓';
+          setTimeout(()=> copyBtn.textContent = 'Copy', 1400);
+        }catch(e){
+          // fallback
+          const ta = document.createElement('textarea');
+          ta.value = raw;
+          document.body.appendChild(ta);
+          ta.select();
+          try{ document.execCommand('copy'); copyBtn.textContent='Copied ✓'; }
+          catch(err){ alert('Copy failed, select and copy manually.'); }
+          ta.remove();
+          setTimeout(()=> copyBtn.textContent = 'Copy', 1400);
+        }
+      });
+    }
+
+    // open button -> new tab with code as text/plain
+    const runBtn = snip.querySelector('.run-btn');
+    if(runBtn){
+      runBtn.addEventListener('click', ()=>{
+        const blob = new Blob([raw], {type:'text/plain'});
+        const url = URL.createObjectURL(blob);
+        window.open(url,'_blank');
+        setTimeout(()=>URL.revokeObjectURL(url), 5000);
+      });
+    }
+  });
+})();
+</script>
+
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+</body></html>

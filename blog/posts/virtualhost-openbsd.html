@@ -285,6 +285,12 @@ server "example.com" {
     directory index "index.html"
 }
     </code></pre>
+<p><b>Catatan: root path ada di <code>/var/www/htdocs</code></b></p>
+<p>Bikin folder <b>example</b>, <code>mkdir -p /var/www/htdocs/example</code></p>
+<h3>Cek konfig</h3>
+<p>Pake perintah <code>httpd -n</code>, kalo muncul <b>ok</b> berarti aman</p>
+<h3>Restart <code>httpd</code></h3>
+<p><code>rcctl restart httpd</code></p>
   </div>
 </div>
 

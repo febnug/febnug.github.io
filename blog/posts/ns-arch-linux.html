@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+
+</head>
+<style>
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+.footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+    padding-bottom: 30px;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">BIND : Konfigurasi nameserver sendiri di VPS (Arch Linux)</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<h3>Install bind</h3>>
+<p><pre>
+pacman -Sy bind
+</pre></p>
+<h3><code>named.conf</code> config</h3>
+<p><pre>
+[root@buitenzorg ~]# cat /etc/named.conf
+// vim:set ts=4 sw=4 et:
+
+options {
+    directory "/var/named";
+//    pid-file "/run/named/named.pid";
+
+    // Uncomment these to enable IPv6 connections support
+    // IPv4 will still work:
+    //  listen-on-v6 { any; };
+    // Add this for no IPv4:
+    //  listen-on { none; };
+
+//    allow-recursion { 127.0.0.1; ::1; };
+//    allow-transfer { none; };
+//    allow-update { none; };
+
+
+// tambah ini    
+    recursion no;
+    allow-query { any; };
+    listen-on port 53 { any; };
+    dnssec-validation no;
+    listen-on { any; };
+
+    version none;
+    hostname none;
+    server-id none;
+};
+
+zone "febri.cfd" IN {
+    type master;
+    file "db.febri.cfd";
+};
+
+zone "75.235.103.in-addr.arpa" IN {
+    type master;
+    file "db.103.235.75";
+};
+
+zone "localhost" IN {
+    type master;
+    file "localhost.zone";
+};
+
+zone "0.0.127.in-addr.arpa" IN {
+    type master;
+    file "127.0.0.zone";
+};
+
+zone "1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa" {
+    type master;
+    file "localhost.ip6.zone";
+};
+
+//zone "example.org" IN {
+//    type slave;
+//    file "example.zone";
+//    masters {
+//        192.168.1.100;
+//    };
+//    allow-query { any; };
+//    allow-transfer { any; };
+//};
+
+//logging {
+//    channel xfer-log {
+//        file "/var/log/named.log";
+//            print-category yes;
+//            print-severity yes;
+//            severity info;
+//        };
+//        category xfer-in { xfer-log; };
+//        category xfer-out { xfer-log; };
+//        category notify { xfer-log; };
+//};
+[root@buitenzorg ~]#
+</pre></p>
+<h3>Konfigurasi zones</h3>
+<h4><code>db.febri.cfd</code></h4>
+<p><pre>
+[root@buitenzorg ~]# cat /var/named/db.febri.cfd
+$TTL 1H
+@       IN SOA  xxx.febri.cfd. hostmaster.febri.cfd. (
+                2025101701 ; Serial
+                1H         ; Refresh
+                15M        ; Retry
+                1W         ; Expire
+                1H )       ; Negative Cache TTL
+
+        IN NS   xxx.febri.cfd.
+        IN NS   are.fnlqxz.still.exist.febri.cfd.  ; opsional
+	IN NS   8.febri.cfd.
+	IN NS	febnug.febri.cfd.
+
+febnug	IN A	103.235.75.120
+8	IN A 	103.235.75.120
+xxx     IN A    103.235.75.120
+are.fnlqxz.still.exist    IN A    103.235.75.120  ; sementara pakai IP sama
+@       IN A    103.235.75.120
+www     IN A    103.235.75.120
+crawler IN A    103.235.75.120
+[root@buitenzorg ~]#
+</pre></p>
+<h4>db.103.235.75</h4>
+<p><pre>
+[root@buitenzorg ~]# cat /var/named/db.103.235.75 
+$TTL 1H
+@       IN SOA  xxx.febri.cfd. hostmaster.febri.cfd. (
+                2025101701
+                1H
+                15M
+                1W
+                1H )
+
+        IN NS   xxx.febri.cfd.
+120     IN PTR  febri.cfd.
+</pre></p>
+<p><b>nama domain bisa di sesuaikan sama IP public VPSnya</b></p>
+<p>ga bisa di NAT VPS</p>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

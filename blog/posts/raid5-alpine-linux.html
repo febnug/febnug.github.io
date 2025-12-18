@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">BIND : Konfigurasi nameserver sendiri di VPS (Arch Linux)</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+ <h3>TLDR</h3>
+ <p>Anggep udah install Alpine Linux yang terkoneksi internet pake Qemu tentunya cok</p>
+ <h3>Bikin disk buat disk utama Alpine Linux</h3>
+ <p><pre>
+qemu-img create -f qcow2 alpine-linux.qcow2 4G
+ </pre></p>
+ <h3>Bikin disk buat simulasi disk raid</h3>
+ <p><pre>
+qemu-img create -f qcow2 disk1.qcow2 1G
+qemu-img create -f qcow2 disk2.qcow2 1G
+qemu-img create -f qcow2 disk3.qcow2 1G
+ </pre></p>
+ <h3>Run VM Alpine Linux</h3>
+ <p><pre>
+qemu-system-x86_64 \
+  -m 512M \
+  -boot d \
+  -drive file=alpine-linux.qcow2,if=virtio \
+  -drive file=disk1.qcow2,if=virtio \
+  -drive file=disk2.qcow2,if=virtio \
+  -drive file=disk3.qcow2,if=virtio \
+  -drive file=disk4.qcow2,if=virtio \
+  -device virtio-net,netdev=net0 \
+  -netdev user,id=net0,hostfwd=tcp::2222-:22 \
+  -nographic
+ </pre></p>
+    <h3>Install <code>mdadm</code></h3>
+    <p>Di alpine linux install <code>mdadm</code></p>
+    <p><pre>
+apk update
+apk add mdadm
+    </pre></p>
+<h3>Cek daftar disk</h3>
+<p><pre>
+lolcathost:~# lsblk
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+fd0      2:0    1    0B  0 disk 
+sr0     11:0    1 1024M  0 rom  
+vda    253:0    0    2G  0 disk 
+├─vda1 253:1    0  300M  0 part /boot
+├─vda2 253:2    0  512M  0 part [SWAP]
+└─vda3 253:3    0  1.2G  0 part /
+vdb    253:16   0    1G  0 disk 
+vdc    253:32   0    1G  0 disk 
+vdd    253:48   0    1G  0 disk
+</pre></p>
+<h3>Contoh bikin RAID 5</h3>
+<p><pre>
+sudo mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/vdb /dev/vdc /dev/vdd
+</pre></p>
+<p>Bakal kek gini:</p>
+<p><pre>
+lolcathost:~# mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/vdb /dev/vdc /dev/vdd
+mdadm: /dev/vdb appears to be part of a raid array:
+       level=raid5 devices=3 ctime=Thu Dec 18 13:44:43 2025
+mdadm: /dev/vdc appears to be part of a raid array:
+       level=raid5 devices=3 ctime=Thu Dec 18 13:44:43 2025
+mdadm: /dev/vdd appears to be part of a raid array:
+       level=raid5 devices=3 ctime=Thu Dec 18 13:44:43 2025
+Continue creating array? y
+mdadm: Defaulting to version 1.2 metadata
+mdadm: array /dev/md0 started.
+lolcathost:~#
+</pre></p>
+<p>Cek hasilnya:</p>
+<p><pre>
+lolcathost:~# cat /proc/mdstat
+Personalities : [raid6] [raid5] [raid4] 
+md0 : active raid5 vdd[3] vdc[1] vdb[0]
+      2093056 blocks super 1.2 level 5, 512k chunk, algorithm 2 [3/3] [UUU]
+      
+unused devices: <none>
+lolcathost:~#
+</pre></p>
+<p><pre>
+lolcathost:~# mdadm --detail /dev/md0
+/dev/md0:
+           Version : 1.2
+     Creation Time : Thu Dec 18 14:22:33 2025
+        Raid Level : raid5
+        Array Size : 2093056 (2044.00 MiB 2143.29 MB)
+     Used Dev Size : 1046528 (1022.00 MiB 1071.64 MB)
+      Raid Devices : 3
+     Total Devices : 3
+       Persistence : Superblock is persistent
+
+       Update Time : Thu Dec 18 14:23:00 2025
+             State : clean 
+    Active Devices : 3
+   Working Devices : 3
+    Failed Devices : 0
+     Spare Devices : 0
+
+            Layout : left-symmetric
+        Chunk Size : 512K
+
+Consistency Policy : resync
+
+              Name : lolcathost:0  (local to host lolcathost)
+              UUID : 64b43ef3:4371b483:0ba2792d:b051b788
+            Events : 18
+
+    Number   Major   Minor   RaidDevice State
+       0     253       16        0      active sync   /dev/vdb
+       1     253       32        1      active sync   /dev/vdc
+       3     253       48        2      active sync   /dev/vdd
+lolcathost:~#
+</pre></p>
+<h3>Format dan mount</h3>
+<h4>Bikin fs ext4</h4>
+<p><pre>
+lolcathost:~# mkfs.ext4 /dev/md0
+mke2fs 1.47.2 (1-Jan-2025)
+Creating filesystem with 523264 4k blocks and 130816 inodes
+Filesystem UUID: 31f8080c-eaa2-4cb0-aee7-55ce726af284
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376, 294912
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (8192 blocks): done
+Writing superblocks and filesystem accounting information: done 
+
+lolcathost:~#
+</pre></p>
+<h4>Mount</h4>
+<p><pre>
+lolcathost:~# mkdir /mnt/raid
+lolcathost:~# mount /dev/md0 /mnt/raid
+</pre></p>
+<p>Cek:</p>
+<p><pre>
+lolcathost:~# df -h /mnt/raid
+Filesystem                Size      Used Available Use% Mounted on
+/dev/md0                  1.9G    532.0K      1.8G   0% /mnt/raid
+lolcathost:~#
+</pre></p>
+<h3>Simpan konfigurasi raid</h3>
+<p><pre>
+lolcathost:~# mdadm --detail --scan | tee -a /etc/mdadm.conf
+ARRAY /dev/md0 metadata=1.2 UUID=64b43ef3:4371b483:0ba2792d:b051b788
+lolcathost:~#
+</pre></p>
+<p>Cek:</p>
+<p><pre></pre></p>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

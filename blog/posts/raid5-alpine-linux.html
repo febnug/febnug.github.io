@@ -167,7 +167,7 @@ vdd    253:48   0    1G  0 disk
 </pre></p>
 <h3>Contoh bikin RAID 5</h3>
 <p><pre>
-sudo mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/vdb /dev/vdc /dev/vdd
+mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/vdb /dev/vdc /dev/vdd
 </pre></p>
 <p>Bakal kek gini:</p>
 <p><pre>
@@ -259,11 +259,32 @@ lolcathost:~#
 <h3>Simpan konfigurasi raid</h3>
 <p><pre>
 lolcathost:~# mdadm --detail --scan | tee -a /etc/mdadm.conf
-ARRAY /dev/md0 metadata=1.2 UUID=64b43ef3:4371b483:0ba2792d:b051b788
+ARRAY /dev/md0 metadata=1.2 UUID=0fee8991:fba6111f:15445492:42dfaa0b
 lolcathost:~#
 </pre></p>
 <p>Cek:</p>
-<p><pre></pre></p>
+<p><pre>
+lolcathost:~# cat /etc/mdadm.conf
+</pre></p>
+<h3>Aktifkan mdadm auto-start saat boot</h3>
+<p><pre>
+lolcathost:~# rc-update add mdadm boot
+ * service mdadm added to runlevel boot
+lolcathost:~# rc-service mdadm start
+ * Starting mdadm ...
+ [ ok ]
+lolcathost:~#
+</pre></p>
+<p>Cek status:</p>
+<p><pre>
+lolcathost:~# rc-service mdadm status
+ * status: started
+lolcathost:~#
+</pre></p>
+<h3>Test reboot</h3>
+<p><pre>
+lolcathost:~# reboot
+</pre></p>
     </div>
 
   </div>

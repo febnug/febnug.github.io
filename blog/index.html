@@ -25,6 +25,26 @@
   font-family: 'Sinaloa Regular';
   src: url('sinaloa-regular.ttf') format('truetype');
 }
+@font-face {
+  font-family: "qru";
+  src: local("qru"), 
+       url("../asset/font/Qrunzvord.otf") format("opentype");
+  font-weight: 800;        /* normal weight */
+  font-style: bolf;
+  font-display: swap;      /* tampilkan fallback dulu, lalu swap ke font web saat siap */
+  unicode-range: U+000-5FF; /* optional: batasi range jika mau */
+
+}
+
+/* 2. Jika punya variasi weight/italic, buat satu @font-face per varian */
+@font-face {
+  font-family: "qru";
+  src: url("../asset/font/Qrunzvord.otf") format("opentype");
+  font-weight: 800;
+  font-style: bold;
+  font-display: swap;
+
+}
 .site-title2{position:relative;font-size:22px;font-weight:300;letter-spacing:-1px;font-family: "Bytesized", sans-serif;margin-bottom:0;top:-0px;left:333px;}.site-title2:visited{text-decoration: none;color:black;}
 .site-title2 a:hover{text-decoration: none;}
 .footer{
@@ -65,7 +85,22 @@
     html{
     font-size: 50%;
     }
-}    
+} 
+.omdb p{
+      text-shadow:
+    1px 0 0 #000,
+   -1px 0 0 #000,
+    0 1px 0 #000,
+    0 -1px 0 #000,
+    1px 1px 0 #000,
+   -1px -1px 0 #000,
+    1px -1px 0 #000,
+   -1px 1px 0 #000;
+color: white;
+  letter-spacing: -0.03em;
+  font-size:23px;
+  font-family: qru;
+}   
 .tulisan p{
         font-size: 1rem;
 }
@@ -1597,6 +1632,7 @@ text-decoration: none;
             <p class="tulisan">
                 &copy; 2015 - now
             </p>
+            <center><div class="omdb"><p>over my dead body</p></div></center>
 <div class="tanda_tangan">
 <p>febriyanto</p> 
 <p>nugroho</p>

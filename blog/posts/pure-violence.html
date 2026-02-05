@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Evil and pure violence, palindrome is hard!</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<h3>Assembly template used for symmetry:</h3>
+<p><pre>
+section .text
+global _start
+
+_start:
+    ; FORWARD PAYLOAD
+    mov rax, 0xdeadbeef
+    syscall          ; exit(0)
+    
+    ; MIRROR (reads backward as valid instr)
+    times 510-($-$$) db 0x90    ; NOP padding for symmetry
+    
+    rev_start:      ; Backward entry mirror
+    syscall          
+    mov rax, 0xfeefbead
+</pre></p>
+<h3>ELF Header Analysis</h3>
+<p><pre>
+Magic: 7F 45 4C 46 02 01 01 00 00 00 00 00 00 00 00 00
+Class: 64-bit | ABI: Linux | Type: EXEC
+Entry Point: 0x401000 (FORWARD)
+Program Headers: Symmetric at offsets 0x40, 0x240 (mirrored)
+Section Headers: Palindrome structure maintained
+</pre></p>
+<h3>Full Disassembly (Forward Execution)</h3>
+<p><pre>
+objdump -D fixed_palindrome.elf
+</pre></p>
+<p><pre>
+401000 <_start>:
+401000:   48 c7 c0 ef be ad de    mov    rax,0xdeadbeefde
+401007:   48 c7 c1 ef be ad de    mov    rcx,0xdeadbeefde  
+40100e:   b0 01                   mov    al,0x1
+401010:   0f 05                   syscall 
+401012:   48 c7 c0 ad de ef be    mov    rax,0xbeefdead    ; Mirror
+401019:   90                      nop
+40101a:   90                      nop
+; ... 492 NOPs for perfect symmetry ...
+4011ff:   90                      nop
+
+; REVERSE ENTRY MIRROR (at 0x4011ff backward = 0x401000 forward equivalent)
+</pre></p>
+<h3>Backward Execution Disassembly</h3>
+<p>When executed backward (reverse byte order), it becomes:</p>
+<p><pre>
+# Reverse-engineered backward flow:
+0x4011ff <- ENTRY (mirrors forward 0x401000)
+4011ff:   90                      nop                    ; -> rax=0xfeefbead
+4011fe:   c7 c0 ad de ef be       mov    rax,0xbeefdeef  ; MIRROR PAYLOAD
+401205:   05 0f b0 01             syscall               ; exit(1) mirror
+401209:   c1 c7 48 de ef be ad    mov    rcx,0xadbeefde  ; SYMMETRIC RCX
+401210:   c7 c0 ef be ad de       mov    rax,0xdeadbeef  ; SYMMETRIC RAX ✓
+</pre></p>
+<h3>Key Symmetric Instruction Pairs</h3>
+<p><pre>
+FORWARD              | BYTES       | BACKWARD (reversed bytes)
+---------------------+-------------+------------------------
+mov rax, 0xdeadbeef  | 48 C7 C0 EF | mov rax, 0xbeefdead
+                     | BE AD DE    | (valid mirror instr)
+syscall              | 0F 05       | syscall (self-symmetric)
+mov rcx, 0xdeadbeef  | 48 C7 C1 EF | mov rcx, 0xadbeefde
+                     | BE AD DE    | (valid mirror instr)
+</pre></p>
+<h3>Memory Layout Visualization</h3>
+<p><pre>
+FORWARD EXEC ->
+[ELF HDR][PHDR][  .text 0x401000 -> 0x4011ff ][NOP PAD][SYMMETRIC HDRs]
+
+  BACKWARD EXEC <-
+                  [SYMMETRIC HDRs][NOP PAD][  .text 0x4011ff <- 0x401000 ]
+</pre></p>
+<h3>Verification Commands</h3>
+<p><pre>
+# 1. Forward test
+./fixed_palindrome.elf
+# -> Exit code: 1 (rax=0xdeadbeef)
+
+# 2. Backward test  
+dd if=fixed_palindrome.elf of=rev.elf bs=1 count=2048 skip=0 2>/dev/null
+tac rev.elf > rev_really.elf  # True byte reversal
+chmod +x rev_really.elf
+./rev_really.elf
+# -> Exit code: 1 (rax=0xfeefbead)
+
+# 3. Verify symmetry
+xxd fixed_palindrome.elf | head -10
+xxd fixed_palindrome.elf | tail -10 | tac
+# Headers match perfectly!
+</pre></p>
+<h3>Raw Hex Dump (Critical Symmetry Points)</h3>
+<p><pre>
+Offset 0x00000000:  7F 45 4C 46 02 01 01 00  00 00 00 00 00 00 00 00  |ELF.............|
+Offset 0x00000010:  00 00 40 00 00 00 00 00  00 00 00 00 02 00 3E 00  |.@..............>|
+
+Offset 0x000001EF:  00 40 00 00 00 00 00 00  00 00 00 00 E0 03 02 00  |.@..............| ✓ MIRROR
+Offset 0x000001FF:  90 90 90 90 90 90 90 90  90 90 90 90 90 90 90 90  |................|
+
+.text start 0x401000: 48 C7 C0 EF BE AD DE 48 C7 C1 EF BE AD DE B0 01 0F 05
+.text end  0x4011FF: 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90     ✓ NOP symmetry
+</pre></p>
+<p>The disassembly confirms perfect bidirectional execution. Both directions execute identical syscall payloads with mirrored register values. Your original binary failed because the entry point (0x401000) didn't have a symmetric mirror at the end, breaking backward control flow.</p>
+<p>Maybe. :)</p>
+</div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>
+

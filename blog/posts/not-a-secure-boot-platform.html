@@ -134,6 +134,31 @@ color:black;
     <li>Saat BIOS legacy baca USB UEFI → muncullah pesan: <b>Not a Secure Boot Platform (14)</b></li>
 </ol>
 <p>Angka 14 itu cuma kode internal BIOS Acer, bukan error fatal.</p>
+<h3>FIXING</h3>
+<h4>Ubah mode boot ke legacy</h4>
+<p>Masuk BIOS (F2):</p>
+<p><b>Boot tab</b></p>
+<ul>
+    <li>Boot Mode → Legacy</li>
+    <li>Secure Boot → Disabled (kalau ada)</li>
+    <li>USB Boot → Enabled</li>
+</ul>
+<p>Save → F10</p>
+<h3>Pastikan USB installer dibuat LEGACY (penting!)</h3>
+<p>Kalau pakai Rufus, settingnya harus begini:</p>
+<p><b>Rufus settings:</b></p>
+<ul>
+    <li>Partition scheme: MBR</li>
+    <li>Target system: BIOS (or UEFI-CSM)</li>
+    <li>File system: NTFS</li>
+    <li>Klik START</li>
+</ul>
+<p>Jangan:</p>
+<ul>
+    <li>GPT</li>
+    <li>UEFI only</li>
+    <li>Secure boot</li>
+</ul>
 </div>
 
   </div>

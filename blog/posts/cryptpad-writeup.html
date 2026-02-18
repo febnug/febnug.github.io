@@ -195,11 +195,11 @@ loc_40155A:
     jmp loc_40155A
 </pre></p>
 <p><b>Analisis</b></p>
-<ol>
-  <ul>edi menunjuk ke <code>unk_4024C5</code></ul>
-  <ul>Loop internal reset setiap 8 byte</ul>
-  <ul>Pattern jelas:</ul>
-</ol>
+<ul>
+  <li>edi menunjuk ke <code>unk_4024C5</code></li>
+  <li>Loop internal reset setiap 8 byte</li>
+  <li>Pattern jelas:</li>
+</ul>
 <p><pre>data[i] ^= key[i % 8]</pre></p>
 <p><pre>Itu adalah fixed-length 8-byte repeating XOR.</pre></p>
 <h3>RC4 Key Scheduling Algorithm (KSA)</h3>
@@ -272,11 +272,11 @@ for (i = 0; i < 256; i++) {
 }
 </pre></p>
 <p>Register mapping:</p>
-<ol>
-  <ul><code>eax</code> → i</ul>
-  <ul><code>bl</code> → j</ul>
-  <ul><code>edi</code> → S-box</ul>
-</ol>
+<ul>
+  <li><code>eax</code> → i</li>
+  <li><code>bl</code> → j</li>
+  <li><code>edi</code> → S-box</li>
+</ul>
 <h3>RC4 PRGA (Pseudo-Random Generation)</h3>
 <p><pre>
 mov esi, [ebp+arg_0]
@@ -322,11 +322,11 @@ for each byte:
     data[n] ^= K
 </pre></p>
 <p>Register mapping:</p>
-<ol>
-  <ul><code>al</code> → i</ul>
-  <ul><code>bl</code> → j</ul>
-  <ul><code>edi</code> → S-box</ul>
-</ol>
+<ul>
+  <li><code>al</code> → i</li>
+  <li><code>bl</code> → j</li>
+  <li><code>edi</code> → S-box</li>
+</ul>
 <p>Stream byte:</p>
 <p><pre>dl = S[S[i] + S[j]]</pre></p>
 <p>Terus:</p>

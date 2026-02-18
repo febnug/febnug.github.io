@@ -159,7 +159,244 @@ cryptpad.exe: PE32 executable (GUI) Intel 80386, for MS Windows, 4 sections
 [ original_length (4 bytes) ]
 [ key / seed / checksum (8 bytes?) ]
 </pre></p>
+<h3>Entry to Encryption Path</h3>
+<p>Flow dari GUI:</p>
+<p><pre>
+GetWindowTextA
+→ sub_40166B (generate random)
+→ sub_4014EB (encrypt)
+→ WriteFile
+</pre></p>
+<p>Fungsi penting:</p>
+<p><pre>sub_4014EB(buffer, length, mode)</pre></p>
+<p><code>mode == 1</code> → encryption path.</p>
+<h3>Pre-Encryption XOR Layer</h3>
+<p>Bagian pertama:</p>
+<p><pre>
+mov esi, [ebp+arg_0]      ; buffer
+mov edi, offset unk_4024C5 ; 8-byte key
+mov ecx, NumberOfBytesWritten
+
+loc_401558:
+    xor edx, edx
+
+loc_40155A:
+    mov al, [esi]
+    mov bl, [edi]
+    xor al, bl
+    mov [esi], al
+    inc esi
+    inc edi
+    inc edx
+    cmp edx, 8
+    jz  loc_401558
+    dec ecx
+    jz  loc_40156F
+    jmp loc_40155A
+</pre></p>
+<p><b>Analisis</b></p>
+<ol>
+  <ul>edi menunjuk ke <code>unk_4024C5</code></ul>
+  <ul>Loop internal reset setiap 8 byte</ul>
+  <ul>Pattern jelas:</ul>
 </ol>
+<p><pre>data[i] ^= key[i % 8]</pre></p>
+<p><pre>Itu adalah fixed-length 8-byte repeating XOR.</pre></p>
+<h3>RC4 Key Scheduling Algorithm (KSA)</h3>
+<p>Bagiannya:</p>
+<p><pre>
+mov eax, offset unk_403795
+mov ecx, 100h
+
+loc_40157A:
+    xor ebx, ebx
+    sub bl, cl
+    mov [eax+ebx], bl
+    loop loc_40157A
+</pre></p>
+<p><b>Analisis</b></p>
+<p>Itu inisialisasi S-box 256 byte:</p>
+<p>Sama aja kaya:</p>
+<p><pre>
+for (i=0; i<256; i++)
+    S[i] = i;
+</pre></p>
+<h4>Key Expansion</h4>
+<p><pre>
+mov edi, 8
+mov esi, offset unk_403695
+mov ecx, 100h
+xor ebx, ebx
+
+loc_401594:
+    cmp ebx, edi
+    jl short loc_40159A
+    xor ebx, ebx
+
+loc_40159A:
+    mov ah, [edx+ebx]
+    mov [esi], ah
+    inc esi
+    inc ebx
+    loop loc_401594
+</pre></p>
+<p><b>Analisis</b></p>
+<p>Itu mengisi buffer 256 byte dengan key 8 byte berulang:</p>
+<p><pre>key_stream[i] = key[i % 8]</pre></p>
+<h4>Mixing Phase</h4>
+<p><pre>
+mov edi, offset unk_403795
+xor ebx, ebx
+xor eax, eax
+mov ecx, 100h
+
+loc_4015B7:
+    mov dl, [esi+eax]
+    add bl, dl
+    mov dl, [edi+eax]
+    add bl, dl
+    mov dl, [edi+eax]
+    mov dh, [edi+ebx]
+    mov [edi+eax], dh
+    mov [edi+ebx], dl
+    inc eax
+    loop loc_4015B7
+</pre></p>
+<p><b>Analisis</b></p>
+<p>Itu textbook RC4 KSA:</p>
+<p><pre>
+j = 0;
+for (i = 0; i < 256; i++) {
+    j = j + S[i] + key[i];
+    swap(S[i], S[j]);
+}
+</pre></p>
+<p>Register mapping:</p>
+<ol>
+  <ul><code>eax</code> → i</ul>
+  <ul><code>bl</code> → j</ul>
+  <ul><code>edi</code> → S-box</ul>
+</ol>
+<h3>RC4 PRGA (Pseudo-Random Generation)</h3>
+<p><pre>
+mov esi, [ebp+arg_0]
+mov edi, offset unk_403795
+mov edx, [ebp+arg_0]
+xor eax, eax
+xor ebx, ebx
+mov ecx, [ebp+arg_4]
+
+loc_4015E2:
+    push ecx
+    movzx ecx, al
+    inc cl
+    push edx
+    mov dh, [edi+ecx]
+    add bl, dh
+    mov dl, [edi+ebx]
+    mov [edi+ecx], dl
+    mov [edi+ebx], dh
+    add dl, dh
+    movzx edx, dl
+    mov dl, [edi+edx]
+    mov cl, [esi+eax]
+    xor cl, dl
+    pop edx
+    mov [edx+eax], cl
+    inc eax
+    pop ecx
+    loop loc_4015E2
+</pre></p>
+<p><b>Analisis</b></p>
+<p>Ini adalah RC4 PRGA:</p>
+<p>Sama aja kaya:</p>
+<p><pre>
+i = 0;
+j = 0;
+
+for each byte:
+    i++
+    j += S[i]
+    swap(S[i], S[j])
+    K = S[(S[i] + S[j]) & 0xFF]
+    data[n] ^= K
+</pre></p>
+<p>Register mapping:</p>
+<ol>
+  <ul><code>al</code> → i</ul>
+  <ul><code>bl</code> → j</ul>
+  <ul><code>edi</code> → S-box</ul>
+</ol>
+<p>Stream byte:</p>
+<p><pre>dl = S[S[i] + S[j]]</pre></p>
+<p>Terus:</p>
+<p><pre>data ^= dl</pre></p>
+<p>100% canonical RC4.</p>
+<h3>Post-XOR Layer</h3>
+<p>Abis RC4 selesai:</p>
+<p><pre>
+mov esi, buffer
+mov edi, offset unk_4024C5
+...
+xor al, bl
+</pre></p>
+<p>Itu identik Pre-XOR.</p>
+<p>Jadi total pipeline:</p>
+<p><pre>
+data = XOR8( RC4( XOR8(data) ) )
+</pre></p>
+<h3>File Footer Structure</h3>
+<p>Bagian akhir fungsi:</p>
+<p><pre>
+mov [edi], eax              ; original_length
+add edi, 4
+mov ecx, 8
+mov esi, offset unk_4024C5
+rep movsb                   ; copy key
+mov byte ptr [edi], 8
+</pre></p>
+<p>Struktur akhir file:</p>
+<p><pre>
+offset +0: encrypted data
+...
+offset -13: original_length (4 byte LE)
+offset -9 : 8-byte key
+offset -1 : 0x08
+</pre></p>
+<p>Total footer: 13 bytes.</p>
+<h3>Script Solver</h3>
+<p>Ini solver script python yang gw bikin</p>
+<p><pre>
+from Crypto.Cipher import ARC4
+
+with open("flag.enc", "rb") as f:
+    data = f.read()
+
+# Extract footer
+footer = data[-13:]
+original_length = int.from_bytes(footer[:4], "little")
+key = footer[4:12]
+
+ciphertext = data[:-13]
+
+# Step 1: XOR 8-byte key
+def xor8(data, key):
+    out = bytearray()
+    for i in range(len(data)):
+        out.append(data[i] ^ key[i % 8])
+    return bytes(out)
+
+step1 = xor8(ciphertext, key)
+
+# Step 2: RC4 decrypt
+rc4 = ARC4.new(key)
+step2 = rc4.decrypt(step1)
+
+# Step 3: XOR again
+plaintext = xor8(step2, key)
+
+print(plaintext[:original_length])
+</pre></p>
 </div>
 
   </div>

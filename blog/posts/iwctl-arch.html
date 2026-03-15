@@ -120,7 +120,75 @@ color:black;
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
+<h3>Caranya</h3>
+<p>Ketik:</p>
+<p><pre>
+root:~# iwctl
+NetworkConfigurationEnabled: enabled
+StateDirectory: /var/lib/iwd
+Version: 2.22
+[iwd]#</pre></p>
+<p>List device</p>
+<p><pre>
+[iwd]# device list
+                                    Devices                                   *
+--------------------------------------------------------------------------------
+  Name                  Address               Powered     Adapter     Mode
+--------------------------------------------------------------------------------
+  wlan0                 ce:28:8f:8f:6c:ad     on          phy0        station
 
+Terminate
+[iwd]#</pre></p>
+<p>Scan & show</p>
+<p><pre>
+[iwd]# station wlan0 scan
+[iwd]# station wlan0 show
+                                 Station: wlan0
+--------------------------------------------------------------------------------
+  Settable  Property              Value
+--------------------------------------------------------------------------------
+            Scanning              no
+            State                 connected
+            Connected network     Febri's Hostspot
+            IPv4 address          10.234.224.45
+            ConnectedBss          aa:6d:51:db:63:e5
+            Frequency             2462
+            Channel               11
+            Security              WPA3-Personal
+            RSSI                  -62 dBm
+            AverageRSSI           -58 dBm
+            TxMode                802.11n
+            TxMCS                 7
+            TxBitrate             72200 Kbit/s
+            RxBitrate             1000 Kbit/s
+            ExpectedThroughput    34968 Kbit/s
+[iwd]#</pre></p>
+<p><b>note: saya udah konek ke SSID itu di awal</b></p>
+<p>Get networks</p>
+<p><pre>
+[iwd]# station wlan0 get-networks
+                               Available networks                             *
+--------------------------------------------------------------------------------
+      Network name                      Security            Signal
+--------------------------------------------------------------------------------
+  >   Febri's Hostspot                  psk                 ****
+      RUTE COFFEE                       psk                 ****
+      Indihome_EXT                      psk                 ****
+      Harry Potter                      psk                 ****
+      PEMPEK METRO_plus                 psk                 ****
+[iwd]#</pre></p>
+<p>Connect</p>
+<p><pre>
+[iwd]# station wlan0 connect "Febri's Hostspot"
+</pre></p>
+<p>Misal gw mau konek ke SSID yang di atas, nanti biasanya tinggal masukin password, in case gw udah konek ke SSID itu</p>
+<p>Contoh laen, gw mau konek ke <code>Indihome_EXT</code></p>
+<p><pre>
+[iwd]# station wlan0 connect Indihome_EXT
+Type the network passphrase for Indihome_EXT psk.
+Terminate
+Passphrase:</pre></p>
+<p>Nah, tinggal masukin passwordnya</p>    
 <h3>Isu <code>iwctl</code> gak bisa konek ke google</h3>
 <p>Edit file konfigurasi <code>/etc/iwd/main.conf</code> jadi:</p>
 <p><pre>

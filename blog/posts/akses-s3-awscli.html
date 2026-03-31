@@ -169,11 +169,15 @@ upload: ./test-upload.txt to s3://febnug-data/test-upload.txt
 febri@ubuntu:~$</pre></p>
 <h3>Download file</h3>
 <p><pre>
-AWS_REQUEST_CHECKSUM_CALCULATION=when_required \
+febri@ubuntu:~/test$ AWS_REQUEST_CHECKSUM_CALCULATION=when_required \
 AWS_RESPONSE_CHECKSUM_VALIDATION=when_required \
 /usr/local/bin/aws s3 cp s3://febnug-data/test-upload.txt . \
 --endpoint-url https://s3.nevaobjects.id \
---region id-jkt-1</pre></p>
+--region id-jkt-1
+download: s3://febnug-data/test-upload.txt to ./test-upload.txt
+febri@ubuntu:~/test$ ls
+test-upload.txt
+febri@ubuntu:~/test$</pre></p>
 </div>
 
   </div>

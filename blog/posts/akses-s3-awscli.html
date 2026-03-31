@@ -178,6 +178,13 @@ download: s3://febnug-data/test-upload.txt to ./test-upload.txt
 febri@ubuntu:~/test$ ls
 test-upload.txt
 febri@ubuntu:~/test$</pre></p>
+<h3>Bikin bucket</h3>
+<p><pre>febri@ubuntu:~$ /usr/local/bin/aws s3api create-bucket \
+--bucket febnug-backup \
+--endpoint-url https://s3.nevaobjects.id \
+--region id-jkt-1
+febri@ubuntu:~$</pre></p>
+<p>Itu pake API <b>s3api</b></p>
 </div>
 
   </div>

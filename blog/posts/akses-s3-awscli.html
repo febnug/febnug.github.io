@@ -185,6 +185,42 @@ febri@ubuntu:~/test$</pre></p>
 --region id-jkt-1
 febri@ubuntu:~$</pre></p>
 <p>Itu pake API <b>s3api</b></p>
+<h3>Bikin bucket jadi public</h3>
+<p><pre>
+febri@ubuntu:~$ /usr/local/bin/aws s3api put-bucket-policy \
+--bucket febnug-backup \
+--policy '{
+  "Version":"2012-10-17",
+  "Statement":[{
+    "Effect":"Allow",
+    "Principal":"*",
+    "Action":["s3:GetObject"],
+    "Resource":["arn:aws:s3:::febnug-backup/*"]
+  }]
+}' \
+--endpoint-url https://s3.nevaobjects.id \
+--region id-jkt-1
+febri@ubuntu:~$</pre></p>
+<p>Test:</p>
+<p><pre>
+febri@ubuntu:~$ curl -I https://s3.nevaobjects.id/febnug-backup/test-upload.txt
+HTTP/2 200 
+date: Tue, 31 Mar 2026 07:58:02 GMT
+content-type: binary/octet-stream
+content-length: 5
+accept-ranges: bytes
+last-modified: Tue, 31 Mar 2026 07:57:54 GMT
+etag: "d8e8fca2dc0f896fd7cb4cb0031ba249"
+x-amz-request-id: tx0000029623084b536818b-0069cb7e8a-6b5fde7-id-jkt-1
+strict-transport-security: max-age=63072000
+server: cloudflare
+alt-svc: h3=":443"; ma=86400
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=USTtu7UpYto9o2eQ0%2BWWqWbrJGaqy19BUWF1mm0gE55F3JW3LI%2B6qzC4zKZvTQkh3WgexLa1Gg3DeSM9R934xbVDk4yOtf%2BoulIR6oYn3F5eeIckcyby85OvSvkUXynki4tG"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+cf-ray: 9e4dce8018ebf8fb-SIN
+
+febri@ubuntu:~$</pre></p>
 </div>
 
   </div>

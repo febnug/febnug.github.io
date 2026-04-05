@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">LOL, fake USB drive?</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<p>Jadi kasusnya gw beli USB drive atau flashdisk merk Toshiba 4GB sizenya, pas gw colokin kok sizenya aneh 64GB akhirnya gw penasaran buat ngoprek USB drive itu.</p>
+<h3>Check</h3>
+<p>Setelah flashdisk gw plug ke portnya, langsung gw cek pake <code>lsblk</code>, disini ke deteknya <code>sdc</code></p>
+<p><pre>
+febri@ubuntu:~$ lsblk | grep sdc
+sdc      8:32   1    64G  0 disk /media/febri/New Volume
+febri@ubuntu:~$</pre></p>
+<h3>Format ke NTFS</h3>
+<p>Gw kepikiran buat nge-format flashdisknya, terus gw ubah file systemnya ke NTFS</p>
+<p>Un-mount dulu:</p>
+<p><pre>
+febri@ubuntu:~$ sudo umount /dev/sdc
+[sudo] password for febri: 
+febri@ubuntu:~$ lsblk | grep sdc
+sdc      8:32   1    64G  0 disk 
+febri@ubuntu:~$</pre></p>
+<p>Terus format/wipe:</p>
+<p><pre>
+febri@ubuntu:~$ sudo wipefs -a /dev/sdc
+/dev/sdc: 8 bytes were erased at offset 0x00000003 (exfat): 45 58 46 41 54 20 20 20
+febri@ubuntu:~$</pre></p>
+<p>Lanjut format:</p>
+<p><pre>
+febri@ubuntu:~$ sudo wipefs -a /dev/sdc
+/dev/sdc: 8 bytes were erased at offset 0x00000003 (exfat): 45 58 46 41 54 20 20 20
+febri@ubuntu:~$ sudo parted /dev/sdc mklabel msdos
+Information: You may need to update /etc/fstab.
+
+febri@ubuntu:~$ sudo parted -a optimal /dev/sdc mkpart primary ntfs 0% 100%
+Information: You may need to update /etc/fstab.
+
+febri@ubuntu:~$ sudo mkfs.ntfs -f /dev/sdc1                               
+Cluster size has been automatically set to 4096 bytes.
+Creating NTFS volume structures.
+mkntfs completed successfully. Have a nice day.
+febri@ubuntu:~$</pre></p>
+<p>Cek:</p>
+<p><pre>
+febri@ubuntu:~$ lsblk | grep sdc
+sdc      8:32   1    64G  0 disk 
+└─sdc1   8:33   1    64G  0 part 
+febri@ubuntu:~$</pre></p>
+<h3>Ngoprek</h3>
+<p>Gw test buat di mount partisi flashdisknya:</p>
+<p><pre>
+febri@ubuntu:~$ sudo mount /dev/sdc1 /mnt
+ntfs_mst_post_read_fixup_warn: magic: 0x00000000  size: 1024   usa_ofs: 0  usa_count: 0: Invalid argument
+ntfs_mst_post_read_fixup_warn: magic: 0x00000000  size: 1024   usa_ofs: 0  usa_count: 0: Invalid argument
+ntfs_mst_post_read_fixup_warn: magic: 0x00000000  size: 1024   usa_ofs: 0  usa_count: 0: Invalid argument
+ntfs_mst_post_read_fixup_warn: magic: 0x00000000  size: 1024   usa_ofs: 0  usa_count: 0: Invalid argument
+Record 0 has no FILE magic (0x0)
+Failed to mount '/dev/sdc1': Input/output error
+NTFS is either inconsistent, or there is a hardware fault, or it's a
+SoftRAID/FakeRAID hardware. In the first case run chkdsk /f on Windows
+then reboot into Windows twice. The usage of the /f parameter is very
+important! If the device is a SoftRAID/FakeRAID then first activate
+it and mount a different device under the /dev/mapper/ directory, (e.g.
+/dev/mapper/nvidia_eahaabcc1). Please see the 'dmraid' documentation
+for more details.
+febri@ubuntu:~$</pre></p>
+<p>Menarik :)</p>
+<p>Jadi error ini:</p>
+<p><pre>
+ntfs_mst_post_read_fixup_warn...
+Record 0 has no FILE magic
+Input/output error</pre></p>
+<p>Jadi agak aneh atau kemungkinan hardware issue, bisa juga flashdisk bermasalah (bad sector / controller issue / fake capacity</p>
+<p>Test read:</p>
+<p><pre>
+febri@ubuntu:~$ sudo dd if=/dev/sdc1 of=/dev/null bs=1M status=progress
+5242880 bytes (5.2 MB, 5.0 MiB) copied, 9 s, 554 kB/s^C
+
+6+0 records in
+5+0 records out
+5242880 bytes (5.2 MB, 5.0 MiB) copied, 13.0532 s, 402 kB/s
+
+febri@ubuntu:~$</pre></p>
+<p>Ini aneh, harusnya minimal puluhan MB, paling normal 10–100 MB/s, kalo cuma 402 kB/s super lambat + kemungkinan error read</p>
+<h3>Rusak vs Fake</h3>
+<p>Coba pake <code>f3probe</code></p>
+<p><pre>
+sudo apt install f3
+sudo f3probe --destructive --time-ops /dev/sdc</pre></p>
+<p>Hasilnya:</p>
+<p><pre>
+febri@ubuntu:~$ sudo f3probe --destructive --time-ops /dev/sdc
+F3 probe 8.0
+Copyright (C) 2010 Digirati Internet LTDA.
+This is free software; see the source for copying conditions.
+
+WARNING: Probing normally takes from a few seconds to 15 minutes, but
+         it can take longer. Please be patient.
+
+Bad news: The device `/dev/sdc' is a counterfeit of type limbo
+
+You can "fix" this device using the following command:
+f3fix --last-sec=2179 /dev/sdc
+
+Device geometry:
+	         *Usable* size: 1.06 MB (2180 blocks)
+	        Announced size: 64.00 GB (134217728 blocks)
+	                Module: 64.00 GB (2^36 Bytes)
+	Approximate cache size: 0.00 Byte (0 blocks), need-reset=no
+	   Physical block size: 512.00 Byte (2^9 Bytes)
+
+Probe time: 31.85s
+ Operation: total time / count = avg time
+      Read: 1.17s / 2155 = 544us
+     Write: 30.68s / 2214 = 13.8ms
+     Reset: 0us / 0 = 0us
+febri@ubuntu:~$</pre></p>
+<p>Nah disini ada pesan, <code>*Usable* size: 1.06 MB (2180 blocks)</code>, kemungkinan size yang bisa di pake kisaran segitu, yah mau ga mau sih</p>
+<p>Format ulang:</p>
+<p><pre>
+febri@ubuntu:~$ sudo parted /dev/sdc mklabel msdos
+Warning: The existing disk label on /dev/sdc will be destroyed and all data on this disk will be lost. Do you want to continue?
+Yes/No? Yes                                                               
+Information: You may need to update /etc/fstab.
+
+febri@ubuntu:~$ sudo parted /dev/sdc mkpart primary ntfs 0% 1.06MB
+Warning: The resulting partition is not properly aligned for best performance: 1s % 2048s != 0s
+Ignore/Cancel? Ignore                                                     
+Information: You may need to update /etc/fstab.
+
+febri@ubuntu:~$ sudo mkfs.ntfs -f /dev/sdc1                               
+Cluster size has been automatically set to 4096 bytes.
+Creating NTFS volume structures.
+mkntfs completed successfully. Have a nice day.
+febri@ubuntu:~$ lsblk | grep sdc
+sdc      8:32   1    64G  0 disk 
+└─sdc1   8:33   1     1M  0 part 
+febri@ubuntu:~$</pre></p>
+</div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

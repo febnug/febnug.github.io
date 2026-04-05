@@ -252,6 +252,23 @@ febri@ubuntu:~$ lsblk | grep sdc
 sdc      8:32   1    64G  0 disk 
 └─sdc1   8:33   1     1M  0 part 
 febri@ubuntu:~$</pre></p>
+<p>Untuk device kecil gini, FAT lebih cocok daripada NTFS</p>
+<p><pre>
+febri@ubuntu:~$ sudo mkfs.vfat /dev/sdc1
+mkfs.fat 4.2 (2021-01-31)
+febri@ubuntu:~$</pre></p>
+<h3>Test mount + bikin file</h3>
+<p><pre>
+febri@ubuntu:~$ sudo mount /dev/sdc1 /mnt
+febri@ubuntu:~$ ls /mnt</pre></p>
+<p><pre>
+febri@ubuntu:~$ sudo sh -c 'echo "ok" > /mnt/test.txt'
+[sudo] password for febri: 
+febri@ubuntu:~$ cat /mnt/test.txt 
+ok
+febri@ubuntu:~$ ls /mnt
+test.txt
+febri@ubuntu:~$</pre></p>
 </div>
 
   </div>

@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Saat ROP Terlihat Benar Tapi Tetap Crash: Sebuah Kisah Debugging</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+
+<p>Reverse engineering dan exploit development sering punya momen yang bikin frustasi: semuanya kelihatan benar, tapi program tetap segmentation fault.</p>
+<p>Artikel ini membahas satu kasus sederhana: membangun ROP chain untuk melakukan <code>write(1, "OK\n", 3)</code>, yang ternyata penuh jebakan kecil—mulai dari gadget yang "hampir benar", sampai asumsi yang salah tentang stack.</p>
+<h3>Setup: Minimal Target Binary</h3>
+<p>Kita mulai dengan binary sederhana berisi gadget manual:</p>
+<p><pre>
+pop rdi ; ret pop rsi ; ret pop rdx ; ret pop rax ; ret syscall ; ret</pre></p>
+<p>Gadget terakhir sengaja dibuat byte-level:</p>
+<p><pre>0f 05 ; syscall 
+c3 ; ret</pre></p>
+<p>Agar benar-benar menjadi <code>syscall ; ret</code></p>
+<h3>Tujuan</h3>
+<p>Kita ingin membuat ROP chain untuk:</p>
+<p><pre>write(1, "OK\n", 3) 
+exit(0)</pre></p>
+<p>Secara teori, chain-nya sederhana:</p>
+<p><pre>pop rdi → 1 
+pop rsi → &"OK\n" 
+pop rdx → 3 
+pop rax → 1 
+syscall
+
+pop rdi → 0 
+pop rax → 60 
+syscall</pre></p>
+<h3>Problem #1: Gadget “Ada”, Tapi Tidak Bisa Dipakai</h3>
+<p>Awalnya, gadget yang ditemukan seperti ini:</p>
+<p><code>pop rdi ; pop rsi ; pop rdx ; pop rax ; syscall</code></p>
+
+<p>Sekilas terlihat powerful, tapi sebenarnya useless untuk ROP</p>
+
+<p>Kenapa? karena tidak ada <code>ret</code></p>
+
+<p>Dalam ROP, setiap gadget harus mengembalikan kontrol ke stack. Tanpa <code>ret</code>, eksekusi akan lanjut ke memory berikutnya—bukan ke
+chain kita</p>
+<h3>Problem #2: <code>syscall</code> Tanpa <code>ret</code></h3>
+<p>Kesalahan berikutnya lebih subtle, walaupun kita punya:</p>
+<p><pre>
+syscall 
+</pre></p>
+
+<p>Nambahin <code>ret</code> di chain seperti ini:</p>
+<p><pre>syscall
+ret</pre></p>
+<p>Gak akan bekerja</p>
+
+<p>CPU tidak mengambil <code>ret</code> dari stack setelah <code>syscall</code>, dia melanjutkan eksekusi ke instruksi berikutnya di memory</p>
+
+<p>Artinya:</p>
+
+<p>Gadget harus benar-benar <code>syscall ; ret</code> di dalam binary,bukan disimulasikan dari chain</p>
+<h3>Problem #3: Tool Tidak Selalu Benar</h3>
+<p></p>Setelah memperbaiki binary, tool seperti ROPgadget masih menampilkan:</p>
+<pre>0x401009 : syscall
+</pre>
+padahal disassembly menunjukkan:
+<p><pre>401009: 0f 05    syscall
+40100b: c3       ret</pre></p>
+<h3>Problem #4: Pointer yang "Kelihatan Benar"</h3>
+<p>Setelah gadget beres, chain tetap crash</p>
+<p>Contoh:</p>
+<p><pre>rsi = BASE + 0x70</pre></p>
+    
+<p>Data <code>"OK\n"</code> memang ada di offset <code>0x70</code>, tapi tetap segfault</p>
+<h3>Problem #5: Stack Tidak Diam</h3>
+Setiap gadget seperti:
+<p><pre>pop rdi
+pop rsi
+pop rdx
+pop rax</pre></p>
+<p>menggeser <code>rsp</code></p>
+
+<p>Akibatnya, asumsi tentang layout memory menjadi salah</p>
+
+<p>Yang terlihat benar di hexdump:</p>
+
+<p><code>payload + 0x70 → "OK\n"</code> tidak lagi valid saat runtime</p>
+<h3>Problem #6: ASLR</h3>
+<p>Lebih parah lagi, alamat mapping berubah setiap run:</p>
+<p><pre>mmap(...) = 0x7ffff7fb5000
+mmap(...) = 0x7ffff7fae000</pre></p>
+
+<p>Artinya:</p>
+
+<p><code>BASE + offset</code> tidak bisa diandalkan tanpa leak</p>
+<h3>Turning Point</h3>
+<p>Solusi yang akhirnya stabil bukan memperbaiki offset, tapi mengubah pendekatan.</p>
+
+<p>Alih-alih:</p>
+
+<p><pre>rsi = BASE + offset</pre></p>
+
+<p>kita gunakan:</p>
+<p><pre>rsi = rsp</pre></p>
+
+<p>Dengan menambahkan gadget:</p>
+<p><pre>mov rsi, rsp
+ret</pre></p>
+<h3>Final Working Idea</h3>
+<p>Dengan gadget tersebut:</p>
+<p><pre>pop rdi → 1
+mov rsi, rsp
+pop rdx → 3
+pop rax → 1
+syscall
+</pre></p>
+
+<p>Dan menaruh <code>"OK\n"</code> tepat setelah chain, pointer menjadi selalu valid—tanpa tergantung BASE, offset, atau ASLR</p>
+<h3>Key Lessons</h3>
+<ol>
+  <li>Gadget harus <code>ret-terminated</code></li>
+  <li><code>syscall</code> tanpa <code>ret</code> memutus chain</li>
+  <li>Tool bisa misleading</li>
+  <li>Stack berubah setiap pop</li>
+  <li>Hardcoded address rapuh</li>
+  <li>RSP adalah sumber pointer paling stabil</li>
+</ol>
+<h3>Closing</h3>
+<p>Kasus ini terlihat sederhana:</p>
+<p>hanya ingin print <code>"OK\n"</code></p>
+
+<p>Tapi di balik itu, ada banyak insight fundamental tentang bagaimana ROP benar-benar bekerja di level rendah</p>
+
+<p>Yang menarik bukan hasil akhirnya, tapi proses debugging yang memaksa kita memahami:</p>
+
+<p><b>Bagaimana CPU benar-benar mengeksekusi chain kita</b></p>
+<h3>Bonus</h3>
+<p>Eksperimen lanjutan:</p>
+<ul>
+  <li>Hilangkan gadget <code>mov rsi, rsp</code></li>
+  <li>Coba buat self-locating ROP</li>
+  <li>Bangun interpreter kecil di atas ROP chain</li>
+</ul>
+  </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

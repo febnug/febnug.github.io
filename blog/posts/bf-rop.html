@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline"> Brainfuck as a ROP Compiler: Turning Programs into Return Chains </h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<p>There is something deeply cursed about using <code>ret</code> as an execution
+engine.</p>
+<p>Normally, Return-Oriented Programming (ROP) is treated as an
+exploitation technique: find gadgets, chain them together, bypass NX,
+spawn a shell, done.</p>
+<p>But after playing with weird machines for a while, I started asking a
+different question:</p>
+<p>What if ROP is not just an exploitation trick?</p>
+<p>What if it is an actual compilation target?</p>
+<p>That idea eventually turned into a tiny experiment:</p>
+<p><pre>Brainfuck → ROP chain → execution via ret</pre></p>
+<p>No dispatcher loop.</p>
+<p>No instruction decoder.</p>
+<p>No normal control flow.</p>
+
+<p>Just stack manipulation and <code>ret</code>.</p>
+
+<p>The result was a surprisingly functional stack-driven virtual machine.</p>
+<h3>The Core Idea</h3>
+<p>Traditional interpreters usually look like this:</p>
+<p><pre>fetch → decode → execute</pre></p>
+<p>Mine does not.</p>
+
+<p>Instead, a Brainfuck program is translated directly into a sequence of
+gadget addresses:</p>
+<p><pre>[g_add][g_add][g_inc_ptr][g_write]...</pre></p>
+<p>The stack itself becomes the instruction stream.</p>
+<p>Execution starts like this:</p>
+<p><pre>lea rsp, chain
+ret</pre></p>
+<p>That single <code>ret</code> starts the entire program.</p>
+
+<p>From that point onward, execution proceeds entirely through chained
+returns:</p>
+<p><pre>ret → gadget
+ret → gadget
+ret → gadget</pre></p>
+<p>At this point, <code>rsp</code> effectively becomes the program counter.</p>
+<h3>The Runtime</h3>
+<p>The VM itself is tiny.</p>
+
+<p>Each Brainfuck instruction maps to a small gadget:</p>
+<p><pre>+  → increment byte
+-  → decrement byte
+>  → increment pointer
+<  → decrement pointer
+.  → write syscall
+,  → read syscall</pre></p>
+<p>Minimal gadgets look like this:</p>
+<p><pre>g_add:
+    inc byte ptr [rbx]
+    ret
+
+g_inc_ptr:
+    inc rbx
+    ret</pre></p>
+<p><pre>Every gadget ends with ret, which keeps the chain alive.</pre></p>
+<h3>No Dispatcher</h3>
+<p>The weird part is that there is no central execution loop.</p>
+<p>No:</p>
+<p><pre>while (...) {
+    switch(opcode) {</pre></p>
+<p>Nothing like that exists.</p>
+
+<p>The stack layout itself is the control flow.</p>
+
+<p>That changes the entire execution model.</p>
+<h3>Loops Without Jumps</h3>
+<p>Brainfuck loops (<code>[</code> and <code>]</code>) turned out to be the most interesting
+part.</p>
+
+<p>Normally, interpreters implement loops using jumps or branches.</p>
+
+<p>I wanted to avoid that entirely.</p>
+
+<p>Instead, loops are implemented by modifying <code>rsp</code>.</p>
+
+<p>Forward skip:</p>
+<p><pre>cmp byte ptr [rbx], 0
+jne continue
+add rsp, N*8
+continue:
+    ret</pre></p>
+<p>Backward jump:</p>
+<p><pre>cmp byte ptr [rbx], 0
+je continue
+sub rsp, N*8
+continue:
+    ret</pre></p>
+<p>This means control flow emerges from stack arithmetic alone.</p>
+
+<p>No dispatcher.</p>
+<p>No instruction pointer.</p>
+<p>No explicit jumps in the VM itself.</p>
+
+<p>Just pointer movement.</p>
+<h3>The Compiler</h3>
+
+<p>The compiler is a small Python script that translates Brainfuck into
+ROP chains.</p>
+
+<p>Example Brainfuck:</p>
+<p><pre>++++++++[>++++++++<-]>+.</pre></p>
+<p>Generated chain:</p>
+<p><pre>.quad g_add
+.quad g_add
+.quad g_add
+...
+.quad g_jz_skip_*
+...
+.quad g_jnz_back_*</pre></p>
+<p>The output is not bytecode.</p>
+
+<p>It is already executable control flow.</p>
+<h3>Unexpected Bugs</h3>
+<p>One of the funniest bugs happened when the chain was placed in
+<code>.data</code> instead of <code>.text</code>.</p>
+
+<p>The VM immediately exploded with:</p>
+<p><pre>SIGSEGV (SEGV_ACCERR)</pre></p>
+<p>because stack control flow eventually fell into non-executable memory.</p>
+
+<p>Another annoying bug involved off-by-one errors in loop offsets.</p>
+
+<p>Since <code>ret</code> implicitly advances <code>rsp</code>, all loop calculations had to
+account for stack movement that was not explicitly visible in the
+source.</p>
+
+<p>A single wrong offset instantly destroyed execution.</p>
+<h3>Why This Felt Interesting</h3>
+
+<p>At some point I realized this stopped feeling like a Brainfuck
+interpreter.</p>
+
+<p>What I accidentally built was closer to:</p>
+
+<p><pre>ROP as a target architecture</pre></p>
+
+<p>The compiled output is simultaneously:</p>
+<ul>
+<li>a valid program</li>
+<li>a valid ROP chain</li>
+<li>a weird machine</li>
+</ul>
+<p>That boundary gets blurry very quickly.</p>
+<h3>Final Thoughts</h3>
+
+<p>ROP is usually discussed as a constraint.</p>
+
+<p>You are forced to reuse tiny instruction sequences because normal
+execution is unavailable.</p>
+
+<p>This project flips that around.</p>
+
+<p>Instead of treating ROP as a limitation, the entire system embraces it
+as the execution model itself.</p>
+
+<p>The result is strange, fragile, slightly impractical, and honestly a
+lot more fun than I expected.</p>
+
+<p>But it also raises an interesting question:</p>
+
+<p>If a program and an exploit payload share the same underlying
+structure, where exactly is the line between them?</p>
+</div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

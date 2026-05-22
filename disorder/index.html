@@ -1,1 +1,672 @@
-<title>disorder</title>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shellcode Vault</title>
+  <meta name="description" content="Static shellcode collection vault for research, CTF, and low-level experiments." />
+  <style>
+    :root {
+      --bg: #080b10;
+      --panel: #0f1622;
+      --panel2: #111b2a;
+      --text: #d9f7ff;
+      --muted: #8aa4b8;
+      --accent: #56f3c5;
+      --accent2: #7aa2ff;
+      --danger: #ff6b8a;
+      --border: rgba(137, 206, 255, 0.16);
+      --shadow: 0 18px 60px rgba(0,0,0,.38);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(86, 243, 197, .12), transparent 32%),
+        radial-gradient(circle at 80% 10%, rgba(122, 162, 255, .12), transparent 36%),
+        linear-gradient(180deg, #070a0f 0%, #0b0f17 45%, #080b10 100%);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 34px 0 18px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(8, 11, 16, .92), rgba(8, 11, 16, .66));
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: .5px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #00140f;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 32px rgba(86, 243, 197, .22);
+      font-family: var(--mono);
+      font-weight: 900;
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .navlinks a {
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+    }
+
+    .navlinks a:hover {
+      border-color: var(--border);
+      color: var(--text);
+      background: rgba(255,255,255,.03);
+    }
+
+    .hero {
+      padding: 76px 0 36px;
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      background: rgba(86, 243, 197, .08);
+      border: 1px solid rgba(86, 243, 197, .22);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(40px, 7vw, 78px);
+      line-height: .95;
+      letter-spacing: -3px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 720px;
+      margin: 22px 0 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 16px;
+      color: var(--text);
+      background: rgba(255,255,255,.035);
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); border-color: rgba(86,243,197,.45); }
+    .btn.primary { background: linear-gradient(135deg, rgba(86,243,197,.22), rgba(122,162,255,.18)); border-color: rgba(86,243,197,.36); }
+
+    .terminal {
+      background: rgba(10, 15, 22, .78);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .termbar {
+      display: flex;
+      gap: 8px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,.04);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot { width: 11px; height: 11px; border-radius: 999px; background: var(--muted); opacity: .75; }
+    .dot:nth-child(1) { background: var(--danger); }
+    .dot:nth-child(2) { background: #ffd166; }
+    .dot:nth-child(3) { background: var(--accent); }
+
+    pre {
+      margin: 0;
+      padding: 20px;
+      color: #c8fddf;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 18px 0 34px;
+    }
+
+    .stat {
+      background: rgba(255,255,255,.035);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .stat strong { display: block; font-size: 26px; }
+    .stat span { color: var(--muted); font-size: 13px; }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      margin: 22px 0;
+    }
+
+    .search {
+      width: 100%;
+      padding: 15px 16px;
+      color: var(--text);
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .chip {
+      color: var(--muted);
+      background: rgba(255,255,255,.035);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .chip.active, .chip:hover {
+      color: #04100d;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding-bottom: 56px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18);
+      min-height: 270px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card:hover { border-color: rgba(86,243,197,.35); }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 19px;
+      letter-spacing: -.4px;
+    }
+
+    .arch {
+      color: var(--accent);
+      border: 1px solid rgba(86,243,197,.24);
+      background: rgba(86,243,197,.07);
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-family: var(--mono);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .desc { color: var(--muted); line-height: 1.55; margin: 0; font-size: 14px; }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: auto;
+    }
+
+    .tag {
+      color: var(--muted);
+      background: rgba(0,0,0,.18);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-family: var(--mono);
+    }
+
+    .codebox {
+      background: rgba(0,0,0,.28);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .codebox code {
+      display: block;
+      padding: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #d9f7ff;
+      overflow-wrap: anywhere;
+      max-height: 78px;
+      overflow: hidden;
+    }
+
+    .card-actions { display: flex; gap: 9px; }
+    .smallbtn {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 10px;
+      color: var(--text);
+      background: rgba(255,255,255,.035);
+      cursor: pointer;
+      font-weight: 750;
+    }
+    .smallbtn:hover { border-color: rgba(122,162,255,.5); }
+
+    .section-title {
+      margin-top: 30px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .section-title h2 { margin: 0; font-size: 30px; letter-spacing: -1px; }
+    .section-title p { color: var(--muted); margin: 8px 0 0; }
+
+    .note {
+      margin: 0 0 60px;
+      color: var(--muted);
+      background: rgba(255,255,255,.035);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      line-height: 1.65;
+    }
+
+    dialog {
+      width: min(820px, calc(100% - 24px));
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      background: #0b111b;
+      color: var(--text);
+      box-shadow: var(--shadow);
+      padding: 0;
+    }
+
+    dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(7px); }
+    .modal-head { padding: 20px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; gap:18px; align-items:center; }
+    .modal-body { padding: 20px; }
+    .modal-body p { color: var(--muted); line-height: 1.65; }
+    .close { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; cursor:pointer; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      padding: 24px 0 40px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 46px; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .toolbar { grid-template-columns: 1fr; }
+      .filters { justify-content: flex-start; }
+    }
+
+    @media (max-width: 620px) {
+      .nav { align-items: flex-start; flex-direction: column; }
+      .grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
+      h1 { letter-spacing: -1.6px; }
+      header { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="Shellcode Vault home">
+        <span class="logo">FN</span>
+        <span>Shellcode Vault</span>
+      </a>
+      <nav class="navlinks">
+        <a href="#collection">Collection</a>
+        <a href="#notes">Notes</a>
+        <a href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top" class="wrap">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">$ objcopy -O binary -j .text poc.o poc.bin</div>
+        <h1>Static shellcode collection for cursed low-level research.</h1>
+        <p>
+          A clean static vault for organizing Linux shellcode, tiny ELF experiments,
+          encoder/decoder stubs, architecture notes, and CTF proof-of-concepts.
+          Edit the JavaScript array, push to GitHub Pages, done.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#collection">Browse collection</a>
+          <button class="btn" id="copyTemplate">Copy item template</button>
+        </div>
+      </div>
+
+      <div class="terminal" aria-label="terminal preview">
+        <div class="termbar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <pre><code>febri@lab:~/shellcode$ ./xlat_nibble_selfmut
+FN
+
+write(1, "FN\n", 3) = 3
+exit(0) = ?
+
+[+] arch     : x86_64
+[+] style    : xlat / decoder / null-free
+[+] status   : working PoC</code></pre>
+      </div>
+    </section>
+
+    <section class="stats" aria-label="collection stats">
+      <div class="stat"><strong id="totalCount">0</strong><span>Total entries</span></div>
+      <div class="stat"><strong id="archCount">0</strong><span>Architectures</span></div>
+      <div class="stat"><strong id="tagCount">0</strong><span>Unique tags</span></div>
+      <div class="stat"><strong>static</strong><span>No backend needed</span></div>
+    </section>
+
+    <section id="collection">
+      <div class="section-title">
+        <div>
+          <h2>Collection</h2>
+          <p>Search by name, architecture, syscall, encoder, or note.</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input id="search" class="search" type="search" placeholder="Search shellcode: xlat, riscv, write syscall, null-free..." />
+        <div id="filters" class="filters"></div>
+      </div>
+
+      <div id="grid" class="grid"></div>
+    </section>
+
+    <section id="notes">
+      <p class="note">
+        Safety note: keep this vault for authorized research, CTF, lab notes, and
+        educational PoCs. Avoid publishing payloads that target real systems,
+        persistence, credential theft, or unauthorized access.
+      </p>
+    </section>
+  </main>
+
+  <dialog id="modal">
+    <div class="modal-head">
+      <div>
+        <h2 id="modalTitle" style="margin:0"></h2>
+        <div id="modalArch" class="arch" style="display:inline-block;margin-top:10px"></div>
+      </div>
+      <button class="close" onclick="modal.close()">Close</button>
+    </div>
+    <div class="modal-body">
+      <p id="modalDesc"></p>
+      <h3>Build / Run</h3>
+      <div class="codebox"><code id="modalBuild"></code></div>
+      <h3>Bytes</h3>
+      <div class="codebox"><code id="modalBytes"></code></div>
+      <h3>Notes</h3>
+      <p id="modalNotes"></p>
+    </div>
+  </dialog>
+
+  <footer>
+    <div class="wrap">Shellcode Vault — static HTML/CSS/JS. Replace sample entries with your own PoCs.</div>
+  </footer>
+
+  <script>
+    const shellcodes = [
+      {
+        name: "x86_64 write('FN\\n')",
+        arch: "x86_64",
+        status: "working",
+        tags: ["linux", "syscall", "write", "minimal"],
+        description: "Minimal Linux x86_64 syscall shellcode that writes FN and exits cleanly.",
+        bytes: "b8 01 00 00 00 bf 01 00 00 00 48 8d 35 0b 00 00 00 ba 03 00 00 00 0f 05 b8 3c 00 00 00 31 ff 0f 05 46 4e 0a",
+        build: "nasm -f elf64 fn.asm -o fn.o && ld fn.o -o fn && ./fn",
+        notes: "Good baseline entry for comparing size, syscall setup, and extraction with objcopy."
+      },
+      {
+        name: "XLAT nibble decoder",
+        arch: "x86_64",
+        status: "lab",
+        tags: ["xlat", "decoder", "null-free", "self-mutating"],
+        description: "Nibble/table based decoder using XLAT-style lookup ideas for small encoded payloads.",
+        bytes: "eb 1e 5e 48 31 c9 b1 03 ac d7 aa e2 fa b0 01 40 b7 01 48 89 e6 b2 03 0f 05",
+        build: "nasm -f elf64 xlat_nibble.asm -o xlat_nibble.o && ld -z execstack -o xlat_nibble xlat_nibble.o",
+        notes: "Useful for papers about tiny dispatchers, encoded shellcode, and weird instruction abuse."
+      },
+      {
+        name: "RISC-V64 FN writer",
+        arch: "riscv64",
+        status: "working",
+        tags: ["risc-v", "qemu", "ecall", "write"],
+        description: "RISC-V64 Linux ecall based payload that writes FN under qemu-riscv64.",
+        bytes: "97 05 00 00 93 85 e5 01 05 45 0d 46 93 08 00 04 73 00 00 00",
+        build: "riscv64-linux-gnu-as sc.S -o sc.o && riscv64-linux-gnu-ld sc.o -o sc && qemu-riscv64 ./sc",
+        notes: "Nice cross-architecture entry for documenting ABI differences and emulator workflow."
+      },
+      {
+        name: "AArch64 tiny ELF TCP poke",
+        arch: "aarch64",
+        status: "experimental",
+        tags: ["arm64", "tiny-elf", "tcp", "qemu"],
+        description: "Tiny ELF experiment that connects locally, sends FN, and exits in a controlled lab.",
+        bytes: "00 00 80 d2 e1 03 00 91 e2 03 00 91 a8 07 80 d2 01 00 00 d4",
+        build: "aarch64-linux-gnu-as fn_arm64.S -o fn_arm64.o && aarch64-linux-gnu-ld -T link.ld -o linked.elf fn_arm64.o",
+        notes: "Keep this type of network PoC clearly scoped to localhost/lab usage only."
+      },
+      {
+        name: "One-byte VM dispatcher",
+        arch: "x86",
+        status: "research",
+        tags: ["32-bit", "vm", "dispatch", "xlat"],
+        description: "32-bit toy VM PoC that demonstrates compact opcode dispatch and raw syscall output.",
+        bytes: "31 c0 b0 04 31 db b3 01 b9 00 90 04 08 ba 0f 00 00 00 cd 80",
+        build: "nasm -f elf32 poc-vm.asm -o poc-vm.o && ld -m elf_i386 poc-vm.o -o poc-vm && ./poc-vm",
+        notes: "Good candidate for PagedOut/tmpout style explanation with opcode table diagrams."
+      },
+      {
+        name: "DNS query syscall-only stub",
+        arch: "x86_64",
+        status: "research",
+        tags: ["dns", "udp", "syscall", "no-libc"],
+        description: "Pure syscall DNS query experiment without libc resolver, useful for protocol parsing notes.",
+        bytes: "48 31 c0 48 31 ff 48 31 f6 48 31 d2 b0 29 40 b7 02 40 b6 02 b2 11 0f 05",
+        build: "nasm -f elf64 dns_resolve.asm -o dns_resolve.o && ld dns_resolve.o -o dns_resolve && ./dns_resolve",
+        notes: "Document target domain, packet format, resolver IP, and observed response parsing behavior."
+      }
+    ];
+
+    const grid = document.getElementById('grid');
+    const filters = document.getElementById('filters');
+    const search = document.getElementById('search');
+    const modal = document.getElementById('modal');
+    let activeArch = 'all';
+
+    function uniq(arr) { return [...new Set(arr)]; }
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+    }
+
+    function initStats() {
+      document.getElementById('totalCount').textContent = shellcodes.length;
+      document.getElementById('archCount').textContent = uniq(shellcodes.map(s => s.arch)).length;
+      document.getElementById('tagCount').textContent = uniq(shellcodes.flatMap(s => s.tags)).length;
+    }
+
+    function initFilters() {
+      const archs = ['all', ...uniq(shellcodes.map(s => s.arch))];
+      filters.innerHTML = archs.map(a => `<button class="chip ${a === 'all' ? 'active' : ''}" data-arch="${a}">${a}</button>`).join('');
+      filters.querySelectorAll('.chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeArch = btn.dataset.arch;
+          filters.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          render();
+        });
+      });
+    }
+
+    function render() {
+      const q = search.value.trim().toLowerCase();
+      const items = shellcodes.filter(s => {
+        const haystack = [s.name, s.arch, s.status, s.description, s.bytes, s.build, s.notes, ...s.tags].join(' ').toLowerCase();
+        const archOk = activeArch === 'all' || s.arch === activeArch;
+        const queryOk = !q || haystack.includes(q);
+        return archOk && queryOk;
+      });
+
+      grid.innerHTML = items.map((s, idx) => `
+        <article class="card">
+          <div class="card-top">
+            <h3>${escapeHtml(s.name)}</h3>
+            <span class="arch">${escapeHtml(s.arch)}</span>
+          </div>
+          <p class="desc">${escapeHtml(s.description)}</p>
+          <div class="codebox"><code>${escapeHtml(s.bytes)}</code></div>
+          <div class="meta">
+            <span class="tag">${escapeHtml(s.status)}</span>
+            ${s.tags.map(t => `<span class="tag">#${escapeHtml(t)}</span>`).join('')}
+          </div>
+          <div class="card-actions">
+            <button class="smallbtn" onclick="openItem('${escapeHtml(s.name)}')">Details</button>
+            <button class="smallbtn" onclick="copyBytes('${escapeHtml(s.name)}')">Copy bytes</button>
+          </div>
+        </article>
+      `).join('') || `<p class="note">No shellcode matched your search.</p>`;
+    }
+
+    function findByName(name) { return shellcodes.find(s => s.name === name); }
+
+    function openItem(name) {
+      const s = findByName(name);
+      if (!s) return;
+      document.getElementById('modalTitle').textContent = s.name;
+      document.getElementById('modalArch').textContent = s.arch + ' / ' + s.status;
+      document.getElementById('modalDesc').textContent = s.description;
+      document.getElementById('modalBuild').textContent = s.build;
+      document.getElementById('modalBytes').textContent = s.bytes;
+      document.getElementById('modalNotes').textContent = s.notes;
+      modal.showModal();
+    }
+
+    async function copyBytes(name) {
+      const s = findByName(name);
+      if (!s) return;
+      await navigator.clipboard.writeText(s.bytes);
+    }
+
+    document.getElementById('copyTemplate').addEventListener('click', async () => {
+      const template = `{
+  name: "New shellcode title",
+  arch: "x86_64",
+  status: "working",
+  tags: ["linux", "syscall"],
+  description: "Short description here.",
+  bytes: "de ad be ef",
+  build: "nasm -f elf64 file.asm -o file.o && ld file.o -o file && ./file",
+  notes: "Important notes, syscall behavior, badchars, constraints."
+}`;
+      await navigator.clipboard.writeText(template);
+    });
+
+    search.addEventListener('input', render);
+    initStats();
+    initFilters();
+    render();
+  </script>
+</body>
+</html>

@@ -143,6 +143,32 @@ nop</pre></p>
   <li>JIT stub</li>
   <li>crash marker/debug marker</li>
 </ul>
+    <h3>Basic Stub</h3>
+    <p>Versi paling sederhana:</p>
+    <p><pre>.intel_syntax noprefix
+.global stub
+.text
+
+stub:
+    jmp rcx
+    int3
+    int3</pre></p>
+    <p>Kalau dipanggil:</p>
+    <p><pre>void (*fn)() = stub;</pre></p>
+    <p>maka CPU langsung lompat ke alamat di register <code>RCX</code>.</p>
+    <p>Instruksi <code>int3</code> setelahnya sebenarnya unreachable dalam flow normal.</p>
+    <h3>Kenapa Ada <code>int3</code> Setelah <code>jmp</code>?</h3>
+    <h4>Debug Marker</h4>
+    <p><code>int3 (0xCC)</code> adalah software breakpoint.</p>
+    <p>Debugger seperti x64dbg, WinDbg, GDB bakal stop kalau CPU nyentuh byte ini.</p>
+<p>Jadi kadang dipakai sebagai:</p>
+    <p><pre>jmp rcx
+int3
+int3
+int3</pre></p>
+    <p>Artinya:</p>
+    <p>"kalau somehow flow nyasar ke sini, langsung breakpoint"</p>
+    
   </div>
 
   </div>

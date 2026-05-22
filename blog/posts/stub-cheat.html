@@ -168,7 +168,117 @@ int3
 int3</pre></p>
     <p>Artinya:</p>
     <p>"kalau somehow flow nyasar ke sini, langsung breakpoint"</p>
-    
+    <h4>Padding</h4>
+    <p>Kadang stub butuh ukuran tertentu.</p>
+    <p>Misalnya:</p>
+    <p><pre>jmp rcx        ; 2 bytes
+int3           ; 1 byte
+int3           ; 1 byte</pre></p>
+    <p>Total 4 byte.</p>
+
+<p>Atau:</p>
+    <p><pre>jmp rcx
+nop
+nop
+nop
+nop
+nop</pre></p>
+    <p>buat alignment ke boundary tertentu.</p>
+    <h4>Hotpatch Area</h4>
+    <p>Beberapa software sengaja nyisain byte setelah stub supaya nanti bisa di-overwrite runtime.</p>
+    <p>Contoh:</p>
+    <p><pre>jmp rcx
+int3
+int3</pre></p>
+    <p>Nanti patcher bisa ubah jadi:</p>
+    <p><pre>jmp rcx
+jmp other_place</pre></p>
+    <p>atau overwrite full stub.</p>
+    <h3>Implementasi Linux x86_64</h3>
+    <p>Contoh full assembly:</p>
+    <p><pre>.intel_syntax noprefix
+.global _start
+.text
+
+payload:
+    mov rax, 1
+    mov rdi, 1
+    lea rsi, [rip + msg]
+    mov rdx, 6
+    syscall
+
+    mov rax, 60
+    xor rdi, rdi
+    syscall
+
+stub:
+    jmp rcx
+    int3
+    int3
+    nop
+    nop
+
+_start:
+    lea rcx, [rip + payload]
+    call stub
+
+msg:
+    .ascii "hello\n"</pre></p>
+    <p>Compile:</p>
+    <p><pre>gcc -nostdlib -static test.s -o test</pre></p>
+    <p>
+      Flow:
+    </p>
+    <p><pre>_start
+  -> RCX = payload
+  -> call stub
+       -> jmp rcx
+            -> payload</pre></p>
+    <p>Instruksi <code>int3</code> dan <code>nop</code> gak pernah dieksekusi.</p>
+    <h3>Variasi Trampoline Stub</h3>
+    <h4><code>jmp rax</code></h4>
+    <p>Umum banget</p>
+    <h4>RIP-relative trampoline</h4>
+    <p><pre>lea rax, [rip + target]
+jmp rax
+int3</pre></p>
+    <h4>Indirect memory jump</h4>
+    <p><pre>jmp qword ptr [rip + target_ptr]
+int3</pre></p>
+    <p>Mirip import thunk.</p>
+    <h3>Kenapa Cheat Engine / Injector Suka Pola Begini?</h3>
+    <p>Karena gampang banget buat:</p>
+    <ul>
+      <li>redirect flow</li>
+      <li>overwrite instruction</li>
+      <li>bikin trampoline</li>
+      <li>detour function</li>
+      <li>runtime patching</li>
+      <li>temporary hook</li>
+    </ul>
+    <p>Misalnya:</p>
+    <p>Original:</p>
+    <p><pre>mov eax, 1
+add eax, ebx</pre></p>
+    <p>Dispatch:</p>
+    <p><pre>jmp my_stub
+nop
+nop</pre></p>
+    <p>Lalu di <code>my_stub</code>:</p>
+    <p><pre>; custom code
+
+jmp return_address</pre></p>
+    <p>Konsep begini dipakai di:</p>
+    <ul>
+      <li>detours</li>
+      <li>instrumentation</li>
+      <li>profilers</li>
+      <li>anti-cheat</li>
+      <li>cheat</li>
+      <li>sandboxing</li>
+      <li>emulator</li>
+      <li>DBI (dynamic binary instrumentation)</li>
+    </ul>
   </div>
 
   </div>

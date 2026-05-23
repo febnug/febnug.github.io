@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buat Kamu</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top, #ffd6e8, #ff8fb3 45%, #7b2ff7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: #fff;
+    }
+
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -40px;
+      font-size: 24px;
+      animation: floatUp linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      20% { opacity: 0.8; }
+      to {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .card {
+      width: min(92vw, 460px);
+      padding: 32px 26px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.22);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(32px, 7vw, 52px);
+      line-height: 1.05;
+      margin-bottom: 18px;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+    }
+
+    p {
+      font-size: 17px;
+      line-height: 1.7;
+      margin-bottom: 26px;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .name {
+      color: #fff6a9;
+      font-weight: bold;
+    }
+
+    .buttons {
+      height: 90px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      border-radius: 999px;
+      padding: 14px 22px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: 0.2s ease;
+    }
+
+    #yesBtn {
+      background: #fff;
+      color: #e91e63;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    #yesBtn:hover {
+      transform: scale(1.08);
+    }
+
+    #noBtn {
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      position: relative;
+    }
+
+    .result {
+      display: none;
+      margin-top: 12px;
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .result.show {
+      display: block;
+      animation: pop 0.45s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .footer {
+      margin-top: 18px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.75);
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+
+  <main class="card">
+    <div class="badge">ada pesan kecil buat kamu</div>
+    <h1>Hai, <span class="name">Kamu</span> ❤️</h1>
+    <p>
+      Aku nggak jago bikin kata-kata manis, tapi aku jujur.
+      Dari sekian banyak hal random di hidupku, kamu salah satu yang paling bikin aku senyum.
+      Jadi... boleh nggak aku jadi alasan kamu senyum juga?
+    </p>
+
+    <div class="buttons">
+      <button id="yesBtn">Mau ❤️</button>
+      <button id="noBtn">Nggak 😭</button>
+    </div>
+
+    <div class="result" id="result">
+      YEAYYY! Mulai hari ini aku resmi punya alasan buat makin semangat 😭❤️<br />
+      Screenshot halaman ini, terus kirim ke aku ya.
+    </div>
+
+    <div class="footer">dibuat khusus, bukan template pasaran.</div>
+  </main>
+
+  <script>
+    const hearts = document.getElementById('hearts');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const result = document.getElementById('result');
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = ['❤️', '💗', '💕', '💖', '🌸'][Math.floor(Math.random() * 5)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = 4 + Math.random() * 5 + 's';
+      heart.style.fontSize = 16 + Math.random() * 24 + 'px';
+      hearts.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 9000);
+    }
+
+    setInterval(createHeart, 260);
+
+    yesBtn.addEventListener('click', () => {
+      result.classList.add('show');
+      yesBtn.textContent = 'Aku juga suka kamu ❤️';
+      for (let i = 0; i < 30; i++) setTimeout(createHeart, i * 60);
+    });
+
+    function moveNoButton() {
+      const card = document.querySelector('.card');
+      const maxX = card.clientWidth - noBtn.offsetWidth - 40;
+      const maxY = 70;
+      const x = Math.random() * maxX - maxX / 2;
+      const y = Math.random() * maxY - maxY / 2;
+      noBtn.style.position = 'absolute';
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    noBtn.addEventListener('mouseenter', moveNoButton);
+    noBtn.addEventListener('click', moveNoButton);
+    noBtn.addEventListener('touchstart', moveNoButton);
+  </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Internal Trainer ELF, Shellcode Stub untuk Self-Memory Mutation di Linux x86-64 </h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<p>Kebanyakan trainer modern bekerja dengan cara memodifikasi memory
+proses lain. Teknik yang digunakan biasanya melibatkan API seperti
+ptrace, injection, atau manipulasi memory eksternal.</p>
+    
+<p>Tapi bagaimana kalau konsep trainer tersebut diperkecil menjadi sebuah
+ELF minimal yang hanya memodifikasi dirinya sendiri?</p>
+    <p>Artikel ini membahas eksperimen kecil tentang:</p>
+    <ul>
+      <li>ELF minimal berbasis syscall Linux</li>
+      <li>Shellcode null-free</li>
+      <li>Self-memory mutation</li>
+      <li>Teknik <code>jmp-call-pop</code></li>
+      <li>Ekstraksi shellcode menggunakan <code>objcopy</code></li>
+    </ul>
+    <p>Semua dilakukan tanpa libc, tanpa dynamic linker, dan tanpa proses
+eksternal.</p>
+    <h3>Ide Dasar</h3>
+    <p>Program memiliki string internal:</p>
+    <p><pre>self-memory mutation: hp patched to 999</pre></p>
+    <p>Huruf <code>d</code> berubah menjadi <code>D</code> secara langsung di memory runtime.</p>
+    <h3>Kenapa Menarik?</h3>
+    <p>Eksperimen seperti ini terlihat sederhana, tetapi sebenarnya menyentuh
+beberapa konsep penting dalam dunia shellcode modern:</p>
+    <ol>
+      <li>Position Independent Code (PIC)</li>
+      <li>Self-referential payload</li>
+      <li>Runtime memory mutation</li>
+      <li>Null-byte avoidance</li>
+      <li>Pure syscall execution</li>
+      <li>Embedded data access</li>
+    </ol>
+    <p>Teknik kecil seperti ini sering menjadi pondasi untuk:</p>
+    <ol>
+      <li>polymorphic shellcode</li>
+      <li>self-decoding payload</li>
+      <li>tiny loader</li>
+      <li>staged payload</li>
+      <li>runtime patching</li>
+      <li>shellcode encoder</li>
+    </ol>
+    <h3>Teknik <code>jmp-call-pop</code></h3>
+    <p>Shellcode hampir selalu berjalan di alamat memory yang tidak diketahui.</p>
+    <p>Karena itu kita tidak bisa menulis:</p>
+    <p><pre>mov rsi, 0x401000</pre></p>
+    <p>Alamat tersebut belum tentu valid ketika payload dipindahkan.</p>
+    <p>Sebagai gantinya, shellcode klasik menggunakan teknik:</p>
+    <p><pre>jmp -> call -> pop</pre></p>
+    <p>Flow-nya:</p>
+    <p><pre>jmp get_base
+        |
+        v
+     call stub
+        |
+        v
+   push RIP ke stack
+        |
+        v
+      pop rsi</pre></p>
+    <p>Dengan cara ini shellcode bisa mengetahui alamat datanya sendiri tanpa
+hardcoded pointer.</p>
+    <h3>PoC NASM x86-64</h3>
+    <p>Berikut PoCnya:</p>
+    <p><pre>BITS 64
+GLOBAL _start
+
+SECTION .text
+
+_start:
+    jmp short get_base
+
+stub:
+    pop rsi
+
+    ; ubah 'd' -> 'D'
+    xor eax, eax
+    mov al, 'D'
+
+    mov [rsi + marker_offset], al
+
+    ; write(1, msg, len)
+    xor eax, eax
+    mov al, 1
+
+    xor edi, edi
+    inc edi
+
+    xor edx, edx
+    mov dl, msg_len
+
+    syscall
+
+    ; exit(0)
+    xor eax, eax
+    mov al, 60
+
+    xor edi, edi
+
+    syscall
+
+get_base:
+    call stub
+
+msg:
+    db "self-memory mutation: hp patched to 999", 10
+
+msg_len equ $ - msg
+marker_offset equ 31</pre></p>
+    
+</div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+
+
+</body></html>

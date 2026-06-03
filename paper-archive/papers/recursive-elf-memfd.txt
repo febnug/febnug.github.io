@@ -1,0 +1,16 @@
+Title
+=====
+
+Status: draft / rejected / archived
+
+Abstract
+--------
+
+Write the short abstract here.
+
+Notes
+-----
+
+- Put PoC explanation here.
+- Put build/run command here.
+- Put submission notes here.

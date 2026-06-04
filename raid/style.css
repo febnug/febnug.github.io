@@ -98,3 +98,7 @@ pre { white-space: pre-wrap; color: #cbd5e1; margin: 12px 0 0; max-height: 220px
 .source-list li { margin:8px 0; }
 a { color:var(--blue); }
 @media (max-width: 820px) { .top-actions { justify-content:stretch; } .nav-button, .status-card { width:100%; } }
+
+.lang-toggle { min-height:48px; padding:0 16px; }
+.reference-page .hero { align-items:flex-start; }
+@media (max-width:820px){ .lang-toggle { width:100%; } }

@@ -8,173 +8,64 @@
 </head>
 <body>
   <div class="bg-grid"></div>
-  <main class="app">
+  <main class="app reference-page">
     <header class="hero">
       <div>
-        <p class="eyebrow">Storage Training Lab</p>
-        <h1>RAID Reference Guide</h1>
-        <p class="subtitle">Quick disk-count recommendations, capacity formulas, failure tolerance, and practical use cases.</p>
+        <p class="eyebrow" data-en="Storage Training Lab" data-id="Lab Training Storage">Storage Training Lab</p>
+        <h1 data-en="RAID Reference Guide" data-id="Panduan Referensi RAID">RAID Reference Guide</h1>
+        <p class="subtitle" data-en="Quick disk-count recommendations, capacity formulas, failure tolerance, and practical use cases." data-id="Rekomendasi jumlah disk, rumus kapasitas, toleransi kerusakan, dan use case praktis.">Quick disk-count recommendations, capacity formulas, failure tolerance, and practical use cases.</p>
       </div>
-      <a class="nav-button" href="index.html">Back to Simulator</a>
+      <div class="top-actions">
+        <button class="ghost lang-toggle" id="langToggle" type="button">Bahasa Indonesia</button>
+        <a class="nav-button" href="index.html" data-en="Back to Simulator" data-id="Kembali ke Simulator">Back to Simulator</a>
+      </div>
     </header>
 
     <section class="panel reference-note">
-      <h2>Important note</h2>
-      <p>
-        RAID improves availability, but RAID is not a backup. A deleted file, ransomware, filesystem corruption,
-        fire, theft, or controller bug can still destroy data. For important data, keep an offline or offsite backup.
-      </p>
+      <h2 data-en="Important note" data-id="Catatan penting">Important note</h2>
+      <p data-en="RAID improves availability, but RAID is not a backup. A deleted file, ransomware, filesystem corruption, fire, theft, or controller bug can still destroy data. For important data, keep an offline or offsite backup." data-id="RAID meningkatkan ketersediaan data, tapi RAID bukan backup. File yang terhapus, ransomware, filesystem corrupt, kebakaran, pencurian, atau bug controller tetap bisa menghancurkan data. Untuk data penting, tetap simpan backup offline atau offsite.">RAID improves availability, but RAID is not a backup. A deleted file, ransomware, filesystem corruption, fire, theft, or controller bug can still destroy data. For important data, keep an offline or offsite backup.</p>
     </section>
 
     <section class="panel reference-table-wrap">
-      <h2>RAID quick recommendation table</h2>
+      <h2 data-en="RAID quick recommendation table" data-id="Tabel rekomendasi cepat RAID">RAID quick recommendation table</h2>
       <table class="reference-table">
         <thead>
           <tr>
-            <th>Level</th>
-            <th>Minimum</th>
-            <th>Recommended</th>
-            <th>Usable Capacity</th>
-            <th>Failure Tolerance</th>
-            <th>Good For</th>
-            <th>Avoid When</th>
+            <th data-en="Level" data-id="Level">Level</th>
+            <th data-en="Minimum" data-id="Minimum">Minimum</th>
+            <th data-en="Recommended" data-id="Rekomendasi">Recommended</th>
+            <th data-en="Usable Capacity" data-id="Kapasitas Efektif">Usable Capacity</th>
+            <th data-en="Failure Tolerance" data-id="Toleransi Kerusakan">Failure Tolerance</th>
+            <th data-en="Good For" data-id="Cocok Untuk">Good For</th>
+            <th data-en="Avoid When" data-id="Hindari Kalau">Avoid When</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><strong>RAID 0</strong></td>
-            <td>2 disks</td>
-            <td>2-4 disks</td>
-            <td>N x disk size</td>
-            <td>0 disks</td>
-            <td>Scratch disk, cache, temporary render/export workspace, speed tests.</td>
-            <td>Any data you cannot easily recreate.</td>
-          </tr>
-          <tr>
-            <td><strong>RAID 1</strong></td>
-            <td>2 disks</td>
-            <td>2 disks, sometimes 3+ mirror copies</td>
-            <td>1 x disk size</td>
-            <td>Up to N-1 disks if one good copy remains</td>
-            <td>Boot volume, small server, simple NAS, important small datasets.</td>
-            <td>You need high capacity efficiency.</td>
-          </tr>
-          <tr>
-            <td><strong>RAID 5</strong></td>
-            <td>3 disks</td>
-            <td>3-6 disks for small/medium arrays</td>
-            <td>(N - 1) x disk size</td>
-            <td>1 disk</td>
-            <td>Balanced capacity and redundancy for read-heavy NAS workloads.</td>
-            <td>Very large disks or arrays where rebuild time and URE risk matter.</td>
-          </tr>
-          <tr>
-            <td><strong>RAID 6</strong></td>
-            <td>4 disks</td>
-            <td>4-8 disks, or larger arrays needing safer rebuilds</td>
-            <td>(N - 2) x disk size</td>
-            <td>2 disks</td>
-            <td>NAS/storage with large HDDs, archival data, safer parity arrays.</td>
-            <td>Small arrays where losing two disks of capacity is too costly.</td>
-          </tr>
-          <tr>
-            <td><strong>RAID 10</strong></td>
-            <td>4 disks</td>
-            <td>4, 6, 8, 10, or 12 disks</td>
-            <td>(N / 2) x disk size</td>
-            <td>1 disk per mirror pair</td>
-            <td>Databases, VM storage, mixed read/write workloads, fast rebuilds.</td>
-            <td>You need maximum usable capacity from every disk.</td>
-          </tr>
-          <tr>
-            <td><strong>RAID 01</strong></td>
-            <td>4 disks</td>
-            <td>Mostly for learning only</td>
-            <td>(N / 2) x disk size</td>
-            <td>Usually weaker than RAID 10 after first failure</td>
-            <td>Understanding nested RAID behavior.</td>
-            <td>Production systems. Prefer RAID 10.</td>
-          </tr>
-          <tr>
-            <td><strong>JBOD</strong></td>
-            <td>2 disks</td>
-            <td>Any count, only when redundancy is not needed</td>
-            <td>Sum of all disks</td>
-            <td>0 disks</td>
-            <td>Combining disks, lab testing, disposable storage.</td>
-            <td>You need fault tolerance or predictable performance.</td>
-          </tr>
+          <tr><td><strong>RAID 0</strong></td><td data-en="2 disks" data-id="2 disk">2 disks</td><td data-en="2-4 disks" data-id="2-4 disk">2-4 disks</td><td data-en="N x disk size" data-id="N x ukuran disk">N x disk size</td><td data-en="0 disks" data-id="0 disk">0 disks</td><td data-en="Scratch disk, cache, temporary render/export workspace, speed tests." data-id="Scratch disk, cache, workspace render/export sementara, dan tes performa.">Scratch disk, cache, temporary render/export workspace, speed tests.</td><td data-en="Any data you cannot easily recreate." data-id="Data penting yang sulit dibuat ulang.">Any data you cannot easily recreate.</td></tr>
+          <tr><td><strong>RAID 1</strong></td><td data-en="2 disks" data-id="2 disk">2 disks</td><td data-en="2 disks, sometimes 3+ mirror copies" data-id="2 disk, kadang 3+ copy mirror">2 disks, sometimes 3+ mirror copies</td><td data-en="1 x disk size" data-id="1 x ukuran disk">1 x disk size</td><td data-en="Up to N-1 disks if one good copy remains" data-id="Sampai N-1 disk selama masih ada 1 copy sehat">Up to N-1 disks if one good copy remains</td><td data-en="Boot volume, small server, simple NAS, important small datasets." data-id="Volume OS/boot, server kecil, NAS sederhana, dataset kecil yang penting.">Boot volume, small server, simple NAS, important small datasets.</td><td data-en="You need high capacity efficiency." data-id="Butuh efisiensi kapasitas tinggi.">You need high capacity efficiency.</td></tr>
+          <tr><td><strong>RAID 5</strong></td><td data-en="3 disks" data-id="3 disk">3 disks</td><td data-en="3-6 disks for small/medium arrays" data-id="3-6 disk untuk array kecil/menengah">3-6 disks for small/medium arrays</td><td data-en="(N - 1) x disk size" data-id="(N - 1) x ukuran disk">(N - 1) x disk size</td><td data-en="1 disk" data-id="1 disk">1 disk</td><td data-en="Balanced capacity and redundancy for read-heavy NAS workloads." data-id="Kapasitas dan redundancy seimbang untuk NAS yang dominan read.">Balanced capacity and redundancy for read-heavy NAS workloads.</td><td data-en="Very large disks or arrays where rebuild time and URE risk matter." data-id="Disk sangat besar atau array besar yang rebuild lama dan rawan URE.">Very large disks or arrays where rebuild time and URE risk matter.</td></tr>
+          <tr><td><strong>RAID 6</strong></td><td data-en="4 disks" data-id="4 disk">4 disks</td><td data-en="4-8 disks, or larger arrays needing safer rebuilds" data-id="4-8 disk, atau array besar yang butuh rebuild lebih aman">4-8 disks, or larger arrays needing safer rebuilds</td><td data-en="(N - 2) x disk size" data-id="(N - 2) x ukuran disk">(N - 2) x disk size</td><td data-en="2 disks" data-id="2 disk">2 disks</td><td data-en="NAS/storage with large HDDs, archival data, safer parity arrays." data-id="NAS/storage dengan HDD besar, arsip, dan parity array yang lebih aman.">NAS/storage with large HDDs, archival data, safer parity arrays.</td><td data-en="Small arrays where losing two disks of capacity is too costly." data-id="Array kecil saat kehilangan kapasitas 2 disk terasa terlalu mahal.">Small arrays where losing two disks of capacity is too costly.</td></tr>
+          <tr><td><strong>RAID 10</strong></td><td data-en="4 disks" data-id="4 disk">4 disks</td><td data-en="4, 6, 8, 10, or 12 disks" data-id="4, 6, 8, 10, atau 12 disk">4, 6, 8, 10, or 12 disks</td><td data-en="(N / 2) x disk size" data-id="(N / 2) x ukuran disk">(N / 2) x disk size</td><td data-en="1 disk per mirror pair" data-id="1 disk per pasangan mirror">1 disk per mirror pair</td><td data-en="Databases, VM storage, mixed read/write workloads, fast rebuilds." data-id="Database, storage VM, workload read/write campuran, rebuild cepat.">Databases, VM storage, mixed read/write workloads, fast rebuilds.</td><td data-en="You need maximum usable capacity from every disk." data-id="Butuh kapasitas efektif maksimal dari semua disk.">You need maximum usable capacity from every disk.</td></tr>
+          <tr><td><strong>RAID 01</strong></td><td data-en="4 disks" data-id="4 disk">4 disks</td><td data-en="Mostly for learning only" data-id="Lebih cocok untuk pembelajaran saja">Mostly for learning only</td><td data-en="(N / 2) x disk size" data-id="(N / 2) x ukuran disk">(N / 2) x disk size</td><td data-en="Usually weaker than RAID 10 after first failure" data-id="Biasanya lebih lemah dari RAID 10 setelah failure pertama">Usually weaker than RAID 10 after first failure</td><td data-en="Understanding nested RAID behavior." data-id="Memahami perilaku nested RAID.">Understanding nested RAID behavior.</td><td data-en="Production systems. Prefer RAID 10." data-id="Sistem production. Lebih baik pilih RAID 10.">Production systems. Prefer RAID 10.</td></tr>
+          <tr><td><strong>JBOD</strong></td><td data-en="2 disks" data-id="2 disk">2 disks</td><td data-en="Any count, only when redundancy is not needed" data-id="Jumlah bebas, hanya kalau redundancy tidak dibutuhkan">Any count, only when redundancy is not needed</td><td data-en="Sum of all disks" data-id="Total semua disk">Sum of all disks</td><td data-en="0 disks" data-id="0 disk">0 disks</td><td data-en="Combining disks, lab testing, disposable storage." data-id="Menggabungkan disk, lab testing, storage sementara.">Combining disks, lab testing, disposable storage.</td><td data-en="You need fault tolerance or predictable performance." data-id="Butuh fault tolerance atau performa yang konsisten.">You need fault tolerance or predictable performance.</td></tr>
         </tbody>
       </table>
     </section>
 
     <section class="reference-cards">
-      <article class="panel raid-card">
-        <h2>RAID 0 - Striping</h2>
-        <p><strong>Recommendation:</strong> use 2 disks for basic speed testing; 3-4 disks for lab/demo performance scaling.</p>
-        <p><strong>Why:</strong> every extra disk increases speed potential but also increases chance of total array loss.</p>
-        <p><strong>Rule:</strong> if one disk dies, the array is broken.</p>
-      </article>
-
-      <article class="panel raid-card">
-        <h2>RAID 1 - Mirroring</h2>
-        <p><strong>Recommendation:</strong> 2 disks for most cases. Add more mirror copies only for extra read availability.</p>
-        <p><strong>Why:</strong> it is simple, easy to recover, and good for OS or small critical data volumes.</p>
-        <p><strong>Rule:</strong> usable capacity equals the size of one disk.</p>
-      </article>
-
-      <article class="panel raid-card">
-        <h2>RAID 5 - Single Parity</h2>
-        <p><strong>Recommendation:</strong> 3-6 disks for small NAS/lab arrays.</p>
-        <p><strong>Why:</strong> it gives better capacity efficiency than RAID 1, but only survives one failed disk.</p>
-        <p><strong>Rule:</strong> during rebuild, the array has no remaining parity safety.</p>
-      </article>
-
-      <article class="panel raid-card">
-        <h2>RAID 6 - Dual Parity</h2>
-        <p><strong>Recommendation:</strong> 4-8 disks, especially with large HDDs.</p>
-        <p><strong>Why:</strong> it can survive a second disk failure during rebuild.</p>
-        <p><strong>Rule:</strong> write performance is usually lower than RAID 5 because two parity blocks must be updated.</p>
-      </article>
-
-      <article class="panel raid-card">
-        <h2>RAID 10 - Mirror + Stripe</h2>
-        <p><strong>Recommendation:</strong> 4+ disks, always even disk count.</p>
-        <p><strong>Why:</strong> it combines good performance with safer and faster rebuilds than parity RAID.</p>
-        <p><strong>Rule:</strong> it survives failures as long as no mirror pair loses both disks.</p>
-      </article>
-
-      <article class="panel raid-card">
-        <h2>RAID 01 - Stripe + Mirror</h2>
-        <p><strong>Recommendation:</strong> use only as a learning comparison.</p>
-        <p><strong>Why:</strong> after one disk fails, an entire stripe side is considered degraded, making later failures riskier.</p>
-        <p><strong>Rule:</strong> prefer RAID 10 for production-like designs.</p>
-      </article>
-
-      <article class="panel raid-card">
-        <h2>RAID-Z1 / RAID-Z2 / RAID-Z3</h2>
-        <p><strong>RAID-Z1:</strong> similar one-parity protection. Best for small, non-critical pools.</p>
-        <p><strong>RAID-Z2:</strong> two-parity protection. Common safer default for important ZFS storage.</p>
-        <p><strong>RAID-Z3:</strong> three-parity protection. Useful for large vdevs or slow rebuild-risk environments.</p>
-      </article>
-
-      <article class="panel raid-card">
-        <h2>Practical picker</h2>
-        <p><strong>Maximum speed, disposable data:</strong> RAID 0.</p>
-        <p><strong>Simple safety:</strong> RAID 1.</p>
-        <p><strong>Capacity + basic protection:</strong> RAID 5.</p>
-        <p><strong>Large disks / safer rebuild:</strong> RAID 6 or RAID-Z2.</p>
-        <p><strong>VM/database workload:</strong> RAID 10.</p>
-      </article>
+      <article class="panel raid-card"><h2>RAID 0 - Striping</h2><p data-en="Recommendation: use 2 disks for basic speed testing; 3-4 disks for lab/demo performance scaling." data-id="Rekomendasi: pakai 2 disk untuk tes speed dasar; 3-4 disk untuk lab/demo scaling performa.">Recommendation: use 2 disks for basic speed testing; 3-4 disks for lab/demo performance scaling.</p><p data-en="Why: every extra disk increases speed potential but also increases chance of total array loss." data-id="Kenapa: tiap tambahan disk menaikkan potensi speed, tapi juga menaikkan risiko seluruh array hilang.">Why: every extra disk increases speed potential but also increases chance of total array loss.</p><p data-en="Rule: if one disk dies, the array is broken." data-id="Aturan: kalau satu disk mati, array rusak.">Rule: if one disk dies, the array is broken.</p></article>
+      <article class="panel raid-card"><h2>RAID 1 - Mirroring</h2><p data-en="Recommendation: 2 disks for most cases. Add more mirror copies only for extra read availability." data-id="Rekomendasi: 2 disk untuk kebanyakan kasus. Tambah copy mirror hanya kalau butuh availability read ekstra.">Recommendation: 2 disks for most cases. Add more mirror copies only for extra read availability.</p><p data-en="Why: it is simple, easy to recover, and good for OS or small critical data volumes." data-id="Kenapa: simpel, mudah recovery, dan cocok untuk OS atau volume data kecil yang penting.">Why: it is simple, easy to recover, and good for OS or small critical data volumes.</p><p data-en="Rule: usable capacity equals the size of one disk." data-id="Aturan: kapasitas efektif sama dengan ukuran satu disk.">Rule: usable capacity equals the size of one disk.</p></article>
+      <article class="panel raid-card"><h2>RAID 5 - Single Parity</h2><p data-en="Recommendation: 3-6 disks for small NAS/lab arrays." data-id="Rekomendasi: 3-6 disk untuk NAS kecil atau array lab.">Recommendation: 3-6 disks for small NAS/lab arrays.</p><p data-en="Why: it gives better capacity efficiency than RAID 1, but only survives one failed disk." data-id="Kenapa: efisiensi kapasitas lebih baik dari RAID 1, tapi hanya tahan satu disk gagal.">Why: it gives better capacity efficiency than RAID 1, but only survives one failed disk.</p><p data-en="Rule: during rebuild, the array has no remaining parity safety." data-id="Aturan: saat rebuild, array tidak punya sisa perlindungan parity.">Rule: during rebuild, the array has no remaining parity safety.</p></article>
+      <article class="panel raid-card"><h2>RAID 6 - Dual Parity</h2><p data-en="Recommendation: 4-8 disks, especially with large HDDs." data-id="Rekomendasi: 4-8 disk, terutama jika pakai HDD besar.">Recommendation: 4-8 disks, especially with large HDDs.</p><p data-en="Why: it can survive a second disk failure during rebuild." data-id="Kenapa: bisa tetap aman kalau ada disk kedua gagal saat rebuild.">Why: it can survive a second disk failure during rebuild.</p><p data-en="Rule: write performance is usually lower than RAID 5 because two parity blocks must be updated." data-id="Aturan: performa write biasanya lebih rendah dari RAID 5 karena dua blok parity harus di-update.">Rule: write performance is usually lower than RAID 5 because two parity blocks must be updated.</p></article>
+      <article class="panel raid-card"><h2>RAID 10 - Mirror + Stripe</h2><p data-en="Recommendation: 4+ disks, always even disk count." data-id="Rekomendasi: 4+ disk, selalu jumlah disk genap.">Recommendation: 4+ disks, always even disk count.</p><p data-en="Why: it combines good performance with safer and faster rebuilds than parity RAID." data-id="Kenapa: menggabungkan performa bagus dengan rebuild yang lebih aman dan cepat dibanding parity RAID.">Why: it combines good performance with safer and faster rebuilds than parity RAID.</p><p data-en="Rule: it survives failures as long as no mirror pair loses both disks." data-id="Aturan: tetap aman selama tidak ada satu pasangan mirror yang kehilangan dua disk sekaligus.">Rule: it survives failures as long as no mirror pair loses both disks.</p></article>
+      <article class="panel raid-card"><h2>RAID 01 - Stripe + Mirror</h2><p data-en="Recommendation: use only as a learning comparison." data-id="Rekomendasi: gunakan hanya sebagai perbandingan untuk belajar.">Recommendation: use only as a learning comparison.</p><p data-en="Why: after one disk fails, an entire stripe side is considered degraded, making later failures riskier." data-id="Kenapa: setelah satu disk gagal, satu sisi stripe dianggap degraded, sehingga failure berikutnya lebih berisiko.">Why: after one disk fails, an entire stripe side is considered degraded, making later failures riskier.</p><p data-en="Rule: prefer RAID 10 for production-like designs." data-id="Aturan: untuk desain mirip production, pilih RAID 10.">Rule: prefer RAID 10 for production-like designs.</p></article>
+      <article class="panel raid-card"><h2>RAID-Z1 / RAID-Z2 / RAID-Z3</h2><p data-en="RAID-Z1: similar one-parity protection. Best for small, non-critical pools." data-id="RAID-Z1: perlindungan satu parity. Cocok untuk pool kecil yang tidak terlalu kritikal.">RAID-Z1: similar one-parity protection. Best for small, non-critical pools.</p><p data-en="RAID-Z2: two-parity protection. Common safer default for important ZFS storage." data-id="RAID-Z2: perlindungan dua parity. Sering jadi default yang lebih aman untuk storage ZFS penting.">RAID-Z2: two-parity protection. Common safer default for important ZFS storage.</p><p data-en="RAID-Z3: three-parity protection. Useful for large vdevs or slow rebuild-risk environments." data-id="RAID-Z3: perlindungan tiga parity. Cocok untuk vdev besar atau environment dengan risiko rebuild lama.">RAID-Z3: three-parity protection. Useful for large vdevs or slow rebuild-risk environments.</p></article>
+      <article class="panel raid-card"><h2 data-en="Practical picker" data-id="Pilihan praktis">Practical picker</h2><p data-en="Maximum speed, disposable data: RAID 0." data-id="Speed maksimal, data sementara: RAID 0.">Maximum speed, disposable data: RAID 0.</p><p data-en="Simple safety: RAID 1." data-id="Perlindungan simpel: RAID 1.">Simple safety: RAID 1.</p><p data-en="Capacity + basic protection: RAID 5." data-id="Kapasitas + perlindungan dasar: RAID 5.">Capacity + basic protection: RAID 5.</p><p data-en="Large disks / safer rebuild: RAID 6 or RAID-Z2." data-id="Disk besar / rebuild lebih aman: RAID 6 atau RAID-Z2.">Large disks / safer rebuild: RAID 6 or RAID-Z2.</p><p data-en="VM/database workload: RAID 10." data-id="Workload VM/database: RAID 10.">VM/database workload: RAID 10.</p></article>
     </section>
 
     <section class="panel reference-note">
-      <h2>Reference sources</h2>
-      <p>
-        This guide summarizes common RAID behavior and recommendations from vendor and storage documentation,
-        including Dell RAID level specifications, Synology DSM RAID type guidance, Backblaze NAS RAID overview,
-        and TrueNAS community guidance for RAID-Z planning.
-      </p>
+      <h2 data-en="Reference sources" data-id="Sumber referensi">Reference sources</h2>
+      <p data-en="This guide summarizes common RAID behavior and recommendations from vendor and storage documentation." data-id="Panduan ini merangkum perilaku RAID umum dan rekomendasi dari dokumentasi vendor/storage.">This guide summarizes common RAID behavior and recommendations from vendor and storage documentation.</p>
       <ul class="source-list">
         <li><a href="https://www.dell.com/support/kbdoc/en-id/000128635/dell-servers-what-are-the-raid-levels-and-their-specifications" target="_blank" rel="noopener">Dell: RAID levels and specifications</a></li>
         <li><a href="https://kb.synology.com/en-global/DSM/help/DSM/StorageManager/storage_pool_what_is_raid?version=7" target="_blank" rel="noopener">Synology: Choose a RAID type</a></li>
@@ -183,5 +74,21 @@
       </ul>
     </section>
   </main>
+
+  <script>
+    const toggle = document.getElementById('langToggle');
+    let lang = localStorage.getItem('raidRefLang') || 'en';
+    function applyLang(nextLang) {
+      lang = nextLang;
+      document.documentElement.lang = lang === 'id' ? 'id' : 'en';
+      document.querySelectorAll('[data-en][data-id]').forEach(el => {
+        el.textContent = el.dataset[lang];
+      });
+      toggle.textContent = lang === 'en' ? 'Bahasa Indonesia' : 'English';
+      localStorage.setItem('raidRefLang', lang);
+    }
+    toggle.addEventListener('click', () => applyLang(lang === 'en' ? 'id' : 'en'));
+    applyLang(lang);
+  </script>
 </body>
 </html>

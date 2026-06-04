@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAID Reference Guide</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <main class="app">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Storage Training Lab</p>
+        <h1>RAID Reference Guide</h1>
+        <p class="subtitle">Quick disk-count recommendations, capacity formulas, failure tolerance, and practical use cases.</p>
+      </div>
+      <a class="nav-button" href="index.html">Back to Simulator</a>
+    </header>
+
+    <section class="panel reference-note">
+      <h2>Important note</h2>
+      <p>
+        RAID improves availability, but RAID is not a backup. A deleted file, ransomware, filesystem corruption,
+        fire, theft, or controller bug can still destroy data. For important data, keep an offline or offsite backup.
+      </p>
+    </section>
+
+    <section class="panel reference-table-wrap">
+      <h2>RAID quick recommendation table</h2>
+      <table class="reference-table">
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>Minimum</th>
+            <th>Recommended</th>
+            <th>Usable Capacity</th>
+            <th>Failure Tolerance</th>
+            <th>Good For</th>
+            <th>Avoid When</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>RAID 0</strong></td>
+            <td>2 disks</td>
+            <td>2-4 disks</td>
+            <td>N x disk size</td>
+            <td>0 disks</td>
+            <td>Scratch disk, cache, temporary render/export workspace, speed tests.</td>
+            <td>Any data you cannot easily recreate.</td>
+          </tr>
+          <tr>
+            <td><strong>RAID 1</strong></td>
+            <td>2 disks</td>
+            <td>2 disks, sometimes 3+ mirror copies</td>
+            <td>1 x disk size</td>
+            <td>Up to N-1 disks if one good copy remains</td>
+            <td>Boot volume, small server, simple NAS, important small datasets.</td>
+            <td>You need high capacity efficiency.</td>
+          </tr>
+          <tr>
+            <td><strong>RAID 5</strong></td>
+            <td>3 disks</td>
+            <td>3-6 disks for small/medium arrays</td>
+            <td>(N - 1) x disk size</td>
+            <td>1 disk</td>
+            <td>Balanced capacity and redundancy for read-heavy NAS workloads.</td>
+            <td>Very large disks or arrays where rebuild time and URE risk matter.</td>
+          </tr>
+          <tr>
+            <td><strong>RAID 6</strong></td>
+            <td>4 disks</td>
+            <td>4-8 disks, or larger arrays needing safer rebuilds</td>
+            <td>(N - 2) x disk size</td>
+            <td>2 disks</td>
+            <td>NAS/storage with large HDDs, archival data, safer parity arrays.</td>
+            <td>Small arrays where losing two disks of capacity is too costly.</td>
+          </tr>
+          <tr>
+            <td><strong>RAID 10</strong></td>
+            <td>4 disks</td>
+            <td>4, 6, 8, 10, or 12 disks</td>
+            <td>(N / 2) x disk size</td>
+            <td>1 disk per mirror pair</td>
+            <td>Databases, VM storage, mixed read/write workloads, fast rebuilds.</td>
+            <td>You need maximum usable capacity from every disk.</td>
+          </tr>
+          <tr>
+            <td><strong>RAID 01</strong></td>
+            <td>4 disks</td>
+            <td>Mostly for learning only</td>
+            <td>(N / 2) x disk size</td>
+            <td>Usually weaker than RAID 10 after first failure</td>
+            <td>Understanding nested RAID behavior.</td>
+            <td>Production systems. Prefer RAID 10.</td>
+          </tr>
+          <tr>
+            <td><strong>JBOD</strong></td>
+            <td>2 disks</td>
+            <td>Any count, only when redundancy is not needed</td>
+            <td>Sum of all disks</td>
+            <td>0 disks</td>
+            <td>Combining disks, lab testing, disposable storage.</td>
+            <td>You need fault tolerance or predictable performance.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="reference-cards">
+      <article class="panel raid-card">
+        <h2>RAID 0 - Striping</h2>
+        <p><strong>Recommendation:</strong> use 2 disks for basic speed testing; 3-4 disks for lab/demo performance scaling.</p>
+        <p><strong>Why:</strong> every extra disk increases speed potential but also increases chance of total array loss.</p>
+        <p><strong>Rule:</strong> if one disk dies, the array is broken.</p>
+      </article>
+
+      <article class="panel raid-card">
+        <h2>RAID 1 - Mirroring</h2>
+        <p><strong>Recommendation:</strong> 2 disks for most cases. Add more mirror copies only for extra read availability.</p>
+        <p><strong>Why:</strong> it is simple, easy to recover, and good for OS or small critical data volumes.</p>
+        <p><strong>Rule:</strong> usable capacity equals the size of one disk.</p>
+      </article>
+
+      <article class="panel raid-card">
+        <h2>RAID 5 - Single Parity</h2>
+        <p><strong>Recommendation:</strong> 3-6 disks for small NAS/lab arrays.</p>
+        <p><strong>Why:</strong> it gives better capacity efficiency than RAID 1, but only survives one failed disk.</p>
+        <p><strong>Rule:</strong> during rebuild, the array has no remaining parity safety.</p>
+      </article>
+
+      <article class="panel raid-card">
+        <h2>RAID 6 - Dual Parity</h2>
+        <p><strong>Recommendation:</strong> 4-8 disks, especially with large HDDs.</p>
+        <p><strong>Why:</strong> it can survive a second disk failure during rebuild.</p>
+        <p><strong>Rule:</strong> write performance is usually lower than RAID 5 because two parity blocks must be updated.</p>
+      </article>
+
+      <article class="panel raid-card">
+        <h2>RAID 10 - Mirror + Stripe</h2>
+        <p><strong>Recommendation:</strong> 4+ disks, always even disk count.</p>
+        <p><strong>Why:</strong> it combines good performance with safer and faster rebuilds than parity RAID.</p>
+        <p><strong>Rule:</strong> it survives failures as long as no mirror pair loses both disks.</p>
+      </article>
+
+      <article class="panel raid-card">
+        <h2>RAID 01 - Stripe + Mirror</h2>
+        <p><strong>Recommendation:</strong> use only as a learning comparison.</p>
+        <p><strong>Why:</strong> after one disk fails, an entire stripe side is considered degraded, making later failures riskier.</p>
+        <p><strong>Rule:</strong> prefer RAID 10 for production-like designs.</p>
+      </article>
+
+      <article class="panel raid-card">
+        <h2>RAID-Z1 / RAID-Z2 / RAID-Z3</h2>
+        <p><strong>RAID-Z1:</strong> similar one-parity protection. Best for small, non-critical pools.</p>
+        <p><strong>RAID-Z2:</strong> two-parity protection. Common safer default for important ZFS storage.</p>
+        <p><strong>RAID-Z3:</strong> three-parity protection. Useful for large vdevs or slow rebuild-risk environments.</p>
+      </article>
+
+      <article class="panel raid-card">
+        <h2>Practical picker</h2>
+        <p><strong>Maximum speed, disposable data:</strong> RAID 0.</p>
+        <p><strong>Simple safety:</strong> RAID 1.</p>
+        <p><strong>Capacity + basic protection:</strong> RAID 5.</p>
+        <p><strong>Large disks / safer rebuild:</strong> RAID 6 or RAID-Z2.</p>
+        <p><strong>VM/database workload:</strong> RAID 10.</p>
+      </article>
+    </section>
+
+    <section class="panel reference-note">
+      <h2>Reference sources</h2>
+      <p>
+        This guide summarizes common RAID behavior and recommendations from vendor and storage documentation,
+        including Dell RAID level specifications, Synology DSM RAID type guidance, Backblaze NAS RAID overview,
+        and TrueNAS community guidance for RAID-Z planning.
+      </p>
+      <ul class="source-list">
+        <li><a href="https://www.dell.com/support/kbdoc/en-id/000128635/dell-servers-what-are-the-raid-levels-and-their-specifications" target="_blank" rel="noopener">Dell: RAID levels and specifications</a></li>
+        <li><a href="https://kb.synology.com/en-global/DSM/help/DSM/StorageManager/storage_pool_what_is_raid?version=7" target="_blank" rel="noopener">Synology: Choose a RAID type</a></li>
+        <li><a href="https://www.backblaze.com/blog/nas-raid-levels-explained-choosing-the-right-level-to-protect-your-nas-data/" target="_blank" rel="noopener">Backblaze: NAS RAID levels explained</a></li>
+        <li><a href="https://www.truenas.com/community/threads/is-there-still-an-optimal-number-of-drives-for-each-raidz-configuration.97202/" target="_blank" rel="noopener">TrueNAS community: RAID-Z vdev sizing discussion</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

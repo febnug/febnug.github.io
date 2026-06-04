@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>RAID Lab Simulator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <main class="app">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Storage Training Lab</p>
+        <h1>RAID Lab Simulator</h1>
+        <p class="subtitle">Simulate striping, mirroring, parity, failure, and rebuild behavior in a browser.</p>
+      </div>
+      <div class="top-actions"><a class="nav-button" href="reference.html">RAID Reference</a>
+      <div class="status-card" id="healthCard">
+        <span class="dot ok"></span>
+        <div>
+          <strong id="healthTitle">Healthy</strong>
+          <small id="healthText">No failed disks</small>
+        </div>
+      </div>
+      </div>
+    </header>
+
+    <section class="panel controls">
+      <div class="field">
+        <label for="raidMode">RAID Mode</label>
+        <select id="raidMode">
+          <option value="0">RAID 0 - Striping</option>
+          <option value="1">RAID 1 - Mirroring</option>
+          <option value="5">RAID 5 - Distributed Parity</option>
+          <option value="6">RAID 6 - Dual Parity</option>
+          <option value="10">RAID 10 - Mirror + Stripe</option>
+          <option value="01">RAID 01 - Stripe + Mirror</option>
+          <option value="jbod">JBOD - Concatenation</option>
+        </select>
+      </div>
+
+      <div class="field small">
+        <label for="diskCount">Disks</label>
+        <input id="diskCount" type="number" min="2" max="12" value="4" />
+      </div>
+
+      <div class="field small">
+        <label for="diskSize">Disk Size</label>
+        <input id="diskSize" type="number" min="4" max="1024" value="100" />
+      </div>
+
+      <div class="field data-field">
+        <label for="dataInput">Data Payload</label>
+        <input id="dataInput" value="FN-RAID-SIMULATOR-STORAGE-LAB" />
+      </div>
+
+      <div class="actions">
+        <button id="initBtn">Initialize</button>
+        <button id="writeBtn" class="primary">Write Data</button>
+        <button id="rebuildBtn">Rebuild</button>
+        <button id="randomFailBtn" class="danger">Random Fail</button>
+      </div>
+    </section>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="panel theory">
+      <h2 id="modeTitle">RAID 0</h2>
+      <p id="modeDesc"></p>
+      <div class="legend">
+        <span><i class="sample data"></i> Data</span>
+        <span><i class="sample mirror"></i> Mirror</span>
+        <span><i class="sample parity"></i> Parity P</span>
+        <span><i class="sample parity2"></i> Parity Q</span>
+        <span><i class="sample rebuilt"></i> Rebuilt</span>
+      </div>
+    </section>
+
+    <section class="disk-grid" id="disks"></section>
+
+    <section class="panel log-panel">
+      <div class="log-head">
+        <h2>Event Log</h2>
+        <button id="clearLogBtn" class="ghost">Clear</button>
+      </div>
+      <pre id="eventLog"></pre>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

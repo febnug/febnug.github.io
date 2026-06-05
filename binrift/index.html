@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Binarize Pseudo ASM</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  
+  <main class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">⌬</div>
+        <div>
+          <h1>BINRIFT</h1>
+          <p>Pseudo ASM Analyzer</p>
+        </div>
+      </div>
+
+      <section class="drop" id="dropZone">
+        <input id="fileInput" type="file" />
+        <div class="drop-inner">
+          <div class="icon">⬢</div>
+          <h2>Load binary</h2>
+          <p>Drop ELF / PE / raw bytes here</p>
+        </div>
+      </section>
+
+      <nav class="navbox">
+        <a class="active">▣ Overview</a>
+        <a>⌁ Pseudo-ASM</a>
+        <a>⌗ Hex View</a>
+        <a>☰ Sections</a>
+        <a>⚯ Strings</a>
+        <a>⎋ Export</a>
+      </nav>
+
+      <section class="quick notes">
+        <h3>Decoder note</h3>
+        <p>Best-effort x86/x86-64 pseudo decoder. Good for triage and CTF sketching, not a replacement for objdump, radare2, or Ghidra.</p>
+      </section>
+    </aside>
+
+    <section class="mainframe">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Client-side reverse engineering workspace</p>
+          <h2>A dummy disassembler-like for fun</h2>
+        </div>
+        <div class="status"><span></span> Local only · no upload</div>
+      </header>
+
+      <section class="toolbar hidden" id="toolbar">
+        <div class="file-meta" id="fileMeta">No file loaded</div>
+        <div class="controls">
+          <label>Start offset <input id="offsetInput" value="0x0" /></label>
+          <label>Bytes <input id="lenInput" value="512" /></label>
+          <button id="analyzeBtn">Analyze range</button>
+          <button id="saveBtn" class="ghost">Export report</button>
+        </div>
+      </section>
+
+      <section class="cards hidden" id="cards">
+        <article class="card format-card">
+          <div class="card-head"><span>▰</span><h3>Format</h3></div>
+          <pre id="formatBox"></pre>
+        </article>
+        <article class="card entropy-card">
+          <div class="card-head"><span>〽</span><h3>Entropy</h3></div>
+          <pre id="entropyBox"></pre>
+        </article>
+        <article class="card strings-card">
+          <div class="card-head"><span>⚯</span><h3>Interesting strings</h3></div>
+          <pre id="stringsBox"></pre>
+        </article>
+      </section>
+
+      <section class="workspace hidden" id="workspace">
+        <article class="panel hex-panel">
+          <div class="panel-title">
+            <h3>HEX VIEW</h3>
+            <span id="hexInfo"></span>
+          </div>
+          <pre id="hexBox"></pre>
+        </article>
+        <article class="panel asm-panel">
+          <div class="panel-title">
+            <h3>PSEUDO-ASM</h3>
+            <span>best-effort x86-ish decoder</span>
+          </div>
+          <pre id="asmBox"></pre>
+        </article>
+      </section>
+
+      <footer class="footline">
+        <span class="ready-dot"></span> Ready
+        <b>BINRIFT</b>
+        <span>Dummy Disassembler</span>
+      </footer>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

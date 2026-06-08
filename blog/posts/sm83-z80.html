@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">Ketika Byte yang Sama Menjadi Dua Program Berbeda</h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+<p>Berawal dari postingan thread di X oleh Travis Goodspeed, jadi tertarik buat bahas ini</p>
+<p>Jadi kuncinya SM83 bukan “Z80 kecil”, banyak opcode Z80 yang invalid di GameBoy, dan beberapa opcode GameBoy punya panjang instruksi beda dari Z80</p>
+<h3>Observer</h3>
+    <p>Rule praktis yang kuat:</p>
+<p><pre>Disassemble dari offset entry pakai dua mode:
+1. mode SM83
+2. mode Z80
+
+Lalu score:
+
+SM83 kalau:
+- banyak opcode SM83-only:
+  08 10 22 2A 32 3A E0 E2 E8 EA F0 F2 F8 FA
+- banyak akses FF00/FFxx I/O GameBoy
+- tidak ada opcode invalid SM83 di jalur code
+
+Z80 kalau:
+- ada opcode Z80-only/prefix:
+  DD FD ED
+- ada IN/OUT:
+  D3 DB
+- ada EXX / EX DE,HL / shadow-register style:
+  D9 E3 EB
+- SM83 decoder ketemu banyak invalid opcode</pre></p>
+<p>Contoh itu giveaway banget:</p>
+    <p><pre>31 fe ff    ld sp, $fffe
+af          xor a
+21 ff 9f    ld hl, $9fff
+32          ld (hl-), a      ; SM83
+cb 7c       bit 7, h
+20 fb       jr nz, ...</pre></p>
+    <p>Di Z80, byte <code>32</code> bukan <code>ld (hl-),a</code>, tapi:</p>
+    <p><pre>32 cb 7c    ld ($7ccb), a</pre></p>
+    <p>Jadi stream langsung geser alignment, lalu disassembly berikutnya jadi “masuk akal palsu” tapi sebenarnya salah.</p>
+    <p>Heuristic paling simpel:</p>
+    <p><pre>SM83_INVALID = {
+    0xD3, 0xDB, 0xDD, 0xE3, 0xE4, 0xEB,
+    0xEC, 0xED, 0xF4, 0xFC, 0xFD
+}
+
+SM83_STRONG = {
+    0x08, 0x10, 0x22, 0x2A, 0x32, 0x3A,
+    0xE0, 0xE2, 0xE8, 0xEA, 0xF0, 0xF2,
+    0xF8, 0xFA
+}
+
+Z80_STRONG = {
+    0xDD, 0xFD, 0xED, 0xD3, 0xDB, 0xD9,
+    0xE3, 0xEB
+}
+
+def classify(buf):
+    sm83_score = 0
+    z80_score = 0
+
+    for b in buf:
+        if b in SM83_INVALID:
+            z80_score += 8
+
+        if b in SM83_STRONG:
+            sm83_score += 2
+
+        if b in Z80_STRONG:
+            z80_score += 6
+
+    # GameBoy I/O style: FF00+n immediate ops
+    for i in range(len(buf) - 1):
+        if buf[i] in (0xE0, 0xF0):
+            sm83_score += 6
+
+    # classic SM83 pattern: ld (hl-),a ; cb-prefix op
+    for i in range(len(buf) - 2):
+        if buf[i] == 0x32 and buf[i + 1] == 0xCB:
+            sm83_score += 10
+
+    return "SM83/GameBoy" if sm83_score > z80_score else "Z80/TI"</pre></p>
+    <p>Tapi versi yang bener-bener reliable jangan cuma scan byte mentah. Bikin recursive disassembler dari entry point, ikutin <code>jr/jp/call/ret</code>, lalu score hanya opcode yang benar-benar berada di jalur code.</p>
+<p>Rule finalnya:</p>
+    <p><pre>Kalau executed instruction stream mengandung DD/FD/ED/D3/DB → Z80.
+Kalau executed instruction stream memakai 22/2A/32/3A/E0/F0/E2/F2/E8/F8
+dan decoding Z80 bikin alignment/CFG aneh → SM83.</pre></p>
+    <p>Puzzle ini kemungkinan besar solvable karena TI ROM Z80 pasti banyak IX/IY/ED/IO, sedangkan GameBoy code pasti banyak HL+/HL-/LDH FFxx.</p>
+<p>Bonus, solver?</p>
+    <p><pre>#!/usr/bin/env python3
+import sys
+from collections import Counter
+
+SM83_INVALID = {
+    0xD3, 0xDB, 0xDD, 0xE3, 0xE4, 0xEB,
+    0xEC, 0xED, 0xF4, 0xFC, 0xFD
+}
+
+SM83_STRONG = {
+    0x08, 0x10, 0x22, 0x2A, 0x32, 0x3A,
+    0xE0, 0xE2, 0xE8, 0xEA, 0xF0, 0xF2,
+    0xF8, 0xFA
+}
+
+Z80_STRONG = {
+    0xDD, 0xFD, 0xED, 0xD3, 0xDB, 0xD9,
+    0xE3, 0xEB
+}
+
+def classify(buf):
+    c = Counter(buf)
+
+    sm83 = 0
+    z80 = 0
+    reasons = []
+
+    for b in buf:
+        if b in SM83_INVALID:
+            z80 += 10
+        if b in SM83_STRONG:
+            sm83 += 3
+        if b in Z80_STRONG:
+            z80 += 8
+
+    # GameBoy LDH: E0/F0 xx => [$FF00+n]
+    ldh = sum(1 for i in range(len(buf)-1) if buf[i] in (0xE0, 0xF0))
+    sm83 += ldh * 8
+    if ldh:
+        reasons.append(f"SM83 LDH patterns E0/F0: {ldh}")
+
+    # GameBoy C-register I/O: E2/F2
+    ldh_c = c[0xE2] + c[0xF2]
+    sm83 += ldh_c * 8
+    if ldh_c:
+        reasons.append(f"SM83 LDH (C) patterns E2/F2: {ldh_c}")
+
+    # GameBoy HL auto inc/dec opcodes
+    hl_auto = c[0x22] + c[0x2A] + c[0x32] + c[0x3A]
+    sm83 += hl_auto * 6
+    if hl_auto:
+        reasons.append(f"SM83 HL+/HL- patterns: {hl_auto}")
+
+    # Z80 prefix families
+    prefixes = c[0xDD] + c[0xFD] + c[0xED]
+    z80 += prefixes * 15
+    if prefixes:
+        reasons.append(f"Z80 DD/FD/ED prefix usage: {prefixes}")
+
+    # Z80 IN/OUT immediate
+    io = c[0xD3] + c[0xDB]
+    z80 += io * 15
+    if io:
+        reasons.append(f"Z80 IN/OUT opcodes D3/DB: {io}")
+
+    # Very common GB startup pattern:
+    # 31 FE FF AF 21 FF 9F 32 CB 7C 20 FB
+    gb_bootish = bytes([0x31,0xFE,0xFF,0xAF,0x21,0xFF,0x9F,0x32,0xCB,0x7C,0x20,0xFB])
+    if gb_bootish in buf:
+        sm83 += 100
+        reasons.append("GameBoy boot/init-like pattern found")
+
+    verdict = "SM83 / GameBoy" if sm83 > z80 else "Z80 / TI calculator"
+
+    return verdict, sm83, z80, reasons
+
+def main():
+    if len(sys.argv) != 2:
+        print(f"usage: {sys.argv[0]} <rom_or_code.bin>")
+        sys.exit(1)
+
+    path = sys.argv[1]
+    with open(path, "rb") as f:
+        buf = f.read()
+
+    # puzzle says 16KB executable code, but allow any size
+    verdict, sm83, z80, reasons = classify(buf)
+
+    print(f"[+] file       : {path}")
+    print(f"[+] size       : {len(buf)} bytes")
+    print(f"[+] SM83 score : {sm83}")
+    print(f"[+] Z80 score  : {z80}")
+    print(f"[+] verdict    : {verdict}")
+
+    print("\n[+] reasons:")
+    for r in reasons:
+        print(f"    - {r}")
+
+if __name__ == "__main__":
+    main()</pre></p>
+    <h3>Let's dig!</h3>
+    <p>Pertanyaannya:</p>
+    <p>Jika diberikan 16KB kode executable yang berasal dari Z80 atau SM83 (CPU Game Boy), bagaimana cara membedakannya?</p>
+    <p>Jawaban singkat dan terlihat mudah, Ya tinggal disassemble aja.</p>
+    <p>Masalahnya, SM83 dan Z80 punya hubungan yang cukup dekat. Banyak instruksi yang sama, register yang mirip, dan bytecode yang sering kali bisa diterjemahkan menjadi assembly yang terlihat valid di kedua arsitektur.</p>
+    <p>Kalau cuma diberi sekumpulan byte mentah tanpa informasi tambahan, ternyata membedakan keduanya tidak sesederhana yang dibayangkan.</p>
+    <h4>Byte yang Sama, Assembly yang Berbeda</h4>
+    <p>Misalkan kita memiliki byte berikut:</p>
+    <p><pre>31 FE FF
+AF
+21 FF 9F
+32
+CB 7C
+20 FB</pre></p>
+    <p>Jika didisassemble sebagai SM83 (Game Boy), hasilnya:</p>
+    <p><pre>ld sp,$fffe
+xor a
+ld hl,$9fff
+ld (hl-),a
+bit 7,h
+jr nz,$0007</pre></p>
+    <p>Kelihatannya masuk akal.</p>
+    <p>Sekarang coba decode byte yang sama sebagai Z80:</p>
+    <p><pre>ld sp,$fffe
+xor a
+ld hl,$9fff
+ld ($7ccb),a
+jr nz,$0007</pre></p>
+    <p>Di sini muncul perbedaan penting.</p>
+    <p>Opcode <code>0x32</code> pada SM83 berarti:</p>
+    <p><pre>ld (hl-),a</pre></p>
+    <p>Sedangkan pada Z80:</p>
+    <p><pre>ld (nn),a</pre></p>
+    <p>Instruksi yang tadinya hanya satu byte tiba-tiba dianggap sebagai instruksi tiga byte.</p>
+    <p>Akibatnya posisi decoding bergeser, dan seluruh disassembly setelahnya mulai kehilangan sinkronisasi.</p>
+    <p>Inilah petunjuk pertama yang menarik.</p>
+    <h4>SM83 Bukan Z80 Mini</h4>
+    <p>Banyak orang menganggap CPU Game Boy hanyalah Z80 yang dipangkas.
+
+Kenyataannya tidak sesederhana itu.
+
+Nintendo menghapus beberapa fitur Z80 dan menambahkan instruksi baru yang lebih cocok untuk kebutuhan Game Boy.
+
+Beberapa opcode khas Z80:</p>
+    <p><pre>DD
+FD
+ED
+
+D3
+DB
+
+E3
+EB</pre></p>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+</body></html>

@@ -9,21 +9,21 @@ const papers = [
     pocUrl: "https://github.com/yourname/your-repo"
   },
   {
-    title: "Recursive ELF Through memfd",
+    title: "Brainfuck as a ROP Compiler: When Programs Become Return Chains",
     year: "2026",
-    status: "archived",
-    tags: ["ELF", "memfd", "execveat"],
-    description: "Catatan tentang ELF yang mengeksekusi layer berikutnya dari memfd tanpa file child permanen.",
-    paperUrl: "papers/recursive-elf-memfd.txt",
+    status: "rejected",
+    tags: ["ROP", "Brainfuck", "compiler"],
+    description: "ROP chains tapi brainfuck? kenapa engga?",
+    paperUrl: "papers/cfp-febnug2txt",
     pocUrl: "#"
   },
   {
-    title: "Syscalls From Corrupted Context",
+    title: "XLAT Is All You Need",
     year: "2026",
     status: "rejected",
-    tags: ["signals", "syscall", "Linux"],
-    description: "Draft tentang signal handler, sigaltstack, dan eksekusi syscall setelah konteks sengaja dibuat rusak.",
-    paperUrl: "papers/syscalls-corrupted-context.txt",
+    tags: ["x86_64", "shellcode", "Linux"],
+    description: "Experimen memakai XLAT untuk eksekusi /bin/sh",
+    paperUrl: "papers/cfp-febnug3.txt",
     pocUrl: "#"
   }
 ];

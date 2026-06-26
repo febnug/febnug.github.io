@@ -355,6 +355,126 @@ DB
 
 E3
 EB</pre></p>
+    <p>Instruksi-instruksi ini berhubungan dengan:</p>
+    <ul>
+      <li>register IX/IY</li>
+      <li>instruksi extended Z80</li>
+      <li>operasi I/O IN/OUT</li>
+      <li>pertukaran register tertentu</li>
+    </ul>
+    <p>Opcode tersebut tidak ada pada SM83</p>
+    <p>Kalau opcode-opcode ini muncul sebagai bagian dari jalur eksekusi yang valid, kemungkinan besar program tersebut adalah kode Z80.</p>
+    <h3>Jejak Khas Game Boy</h3>
+    <p>Sebaliknya, SM83 memiliki instruksi yang tidak dimiliki Z80.</p>
+    <p>Contohnya:</p>
+    <p><pre>22  ld (hl+),a
+2A  ld a,(hl+)
+
+32  ld (hl-),a
+3A  ld a,(hl-)
+
+E0  ldh ($ff00+n),a
+F0  ldh a,($ff00+n)
+
+E2  ldh (c),a
+F2  ldh a,(c)
+
+E8  add sp,e8
+F8  ld hl,sp+e8</pre></p>
+  <p>Instruksi-instruksi ini muncul terus-menerus pada ROM Game Boy.</p>
+
+<p>Alasannya sederhana.</p>
+
+<p>Perangkat keras Game Boy menggunakan banyak register I/O yang dipetakan pada area memori <code>0xFF00</code>.</p>
+
+<p>Instruksi seperti:</p>
+    <p><pre>ldh ($ff00+n),a</pre></p>
+    <p>hampir menjadi ciri khas kode Game Boy.</p>
+    <h3>Pendekatan Paling Sederhana</h3>
+    <p>Cara termudah adalah menghitung kemunculan opcode tertentu.</p>
+
+<p>Misalnya:</p>
+    <p><pre>Jika DD/FD/ED banyak muncul
+→ kemungkinan Z80
+
+Jika E0/F0/E2/F2 banyak muncul
+→ kemungkinan SM83
+
+Jika 22/2A/32/3A sering muncul
+→ kemungkinan SM83</pre></p>
+    <p>Heuristik seperti ini ternyata cukup efektif.</p>
+
+<p>Banyak ROM Game Boy menggunakan pola akses memori yang sangat khas sehingga bisa dikenali hanya dari distribusi opcode.</p>
+    <h3>Masalah Besarnya</h3>
+    <p>Namun ada satu masalah.</p>
+
+<p>Tidak semua byte dalam ROM adalah kode.</p>
+
+<p>Sebuah ROM biasanya berisi:</p>
+    <ul>
+      <li>sprite</li>
+      <li>tile graphic</li>
+      <li>font</li>
+      <li>tabel lookup</li>
+      <li>string</li>
+      <li>data terkompresi</li>
+    </ul>
+    <p>Kalau kita hanya menghitung byte mentah, hasilnya bisa menyesatkan.</p>
+
+<p>Misalnya sebuah sprite secara kebetulan mengandung byte <code>0xED</code>.</p>
+
+<p>Bukan berarti program tersebut menjalankan instruksi Z80 extended.</p>
+
+<p>Karena itu pendekatan scan byte saja tidak cukup.</p>
+    <h3>Pendekatan yang Lebih Menarik</h3>
+    <p>Daripada menghitung seluruh isi file, kita bisa mencoba menjelaskan byte-byte tersebut menggunakan kedua arsitektur.</p>
+    <p>Langkahnya:</p>
+    <ol>
+      <li>Disassemble sebagai SM83</li>
+      <li>Disassemble sebagai Z80</li>
+      <li>Bangun control-flow graph</li>
+      <li>Bandingkan hasilnya</li>
+    </ol>
+    <p>Untuk arsitektur yang benar biasanya kita mendapatkan:</p>
+    <p><pre>- banyak basic block valid
+- sedikit instruksi aneh
+- target branch masuk akal
+- alur program konsisten</pre></p>
+    <p>Sedangkan arsitektur yang salah biasanya menghasilkan:</p>
+    <p><pre>- alignment instruksi rusak
+- banyak branch aneh
+- control flow berantakan
+- decoding terasa dipaksakan</pre></p>
+    <p>Dengan kata lain, bukan sekadar bertanya:</p>
+    <p><b>Apakah byte ini bisa didisassemble sebagai Z80?</b></p>
+    <p><b>Arsitektur mana yang paling masuk akal untuk menjelaskan byte-byte ini?</b></p>
+    <h3>Kenapa Puzzle Ini Menarik?</h3>
+    <p>Menurut gw bagian paling menarik dari puzzle ini bukan soal Game Boy atau Z80.</p>
+
+<p>Puzzle ini sebenarnya menggambarkan salah satu masalah klasik dalam reverse engineering.</p>
+
+<p>Disassembler hampir selalu bisa menghasilkan output.</p>
+
+<p>Kalau kita memaksa file x86 dibaca sebagai ARM, atau file ARM dibaca sebagai MIPS, kita tetap akan mendapatkan assembly.</p>
+
+<p>Masalahnya adalah:</p>
+    <p><b>apakah assembly tersebut benar-benar masuk akal?</b></p>
+    <p>Pada akhirnya reverse engineering bukan sekadar membaca instruksi.</p>
+
+<p>Yang jauh lebih penting adalah memahami konteks dan mencari penjelasan yang paling konsisten terhadap data yang kita miliki.</p>
+    <h3>Penutup</h3>
+    <p>Kalau gw harus membuat solver untuk puzzle ini, gw tidak akan berhenti pada pencarian opcode unik.</p>
+    <p>Gw akan membuat sistem yang:</p>
+    <ul>
+      <li>mendisassemble sebagai SM83</li>
+      <li>mendisassemble sebagai Z80</li>
+      <li>membangun control-flow graph</li>
+      <li>menghitung skor validitas</li>
+      <li>memilih arsitektur yang paling mampu menjelaskan isi file</li>
+    </ul>
+   <p>Pendekatan seperti ini jauh lebih kuat dibandingkan sekadar mencari byte tertentu.</p>
+
+<p>Dan mungkin saja, di balik 16KB data yang terlihat acak, sebenarnya terdapat sidik jari arsitektur yang cukup kuat untuk mengungkap CPU mana yang menulisnya.</p>
     </div>
 
   </div>

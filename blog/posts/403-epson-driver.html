@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>febri's blog</title>
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="../main.css"><link type="application/atom+xml" rel="alternate" href="" title="">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css"/>
+<link rel="icon" type="image/x-icon" href="../../img/star.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+</head>
+<style>
+@font-face {
+  font-family: 'Sinaloa Regular';
+  src: url('sinaloa-regular.ttf') format('truetype');
+}
+h1.hack{
+    text-transform: uppercase;
+
+
+  font-size:46px;
+  font-family: "Pirata One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+.footer{
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    text-align: center;
+    color: #3d3d3d;
+}
+
+.icons{
+    padding-top: 1rem;
+}
+
+.icons a{
+    text-decoration: none;
+    font-size: 2rem;
+    margin: 0.2rem;
+    color: #3d3d3d;
+}
+.icons a:hover{
+   color: #84817a;
+}
+.company-name{
+    font-size: 1.6rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px){
+    html{
+        font-size: 50%;
+    }
+}    
+
+@media(min-width: 501px) and (max-width: 768px){
+    html{
+    font-size: 50%;
+    }
+}    
+.tulisan p{
+        font-size: 1rem;
+}
+.tanda_tangan {
+  flex-shrink: 0; /* Prevent Chrome, Opera, and Safari from letting these items shrink to smaller than their content's default minimum size. */
+  padding: 30px;
+}
+.tanda_tangan p {
+  position: relative;
+  text-align: center;
+  font: 28.5px/2.70em 'Sinaloa Regular';
+  font-weight: 0;
+  -webkit-font-smoothing: initial;
+/*  letter-spacing: -0.100em;*/
+  line-height: 0.9;
+  text-transform: uppercase;
+  z-index: 1000;
+  margin: 0 auto;
+  display: block;
+  bottom: -5px;
+color:black;
+}
+</style>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="">fnlqxz</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger">
+        <label for="nav-trigger">
+           <span class="menu-icon">
+            <p><i class="fa-solid fa-jedi"></i></p>
+          </span>
+        </label>
+
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope="" itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name hack" itemprop="name headline">403 Forbidden, ketika mencoba download driver printer Epson L1210 series menggunakan wget </h1>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3>TL;DR</h3>
+<p>Gw mau coba install driver printer Epson L1210 series di ubuntu, tapi pas gw download drivernya ga ke direct download otomatis melainkan malah nge-read packagenya di browser</p>
+    <h3>Download</h3>
+    <p>Downloadnya disini, pilih yang linux</p>
+    <p><img src="../../img/epson-1.png"/></p>
+    <p>Pilih yang Epson Printer Utility for Linux</p>
+    <p><img src="../../img/epson-2.png"/></p>
+    <p>Abis itu klik download, nanti muncul kek gini</p>
+    <p><img src="../../img/epson-3.png"/></p>
+    <h3>Solusi</h3>
+    <p>Pake <code>wget</code>, tapi 403 Forbidden?</p>
+    <p><pre>febri@ubuntu:~/Downloads$ wget https://download-center.epson.com/f/module/fa120df3-ac90-44a1-b41e-c65568b3e4d6/epson-printer-utility_1.2.3-1_amd64.deb
+--2026-07-15 11:58:51--  https://download-center.epson.com/f/module/fa120df3-ac90-44a1-b41e-c65568b3e4d6/epson-printer-utility_1.2.3-1_amd64.deb
+Resolving download-center.epson.com (download-center.epson.com)... 23.200.60.141, 2600:1417:5c00:285::d2e, 2600:1417:5c00:28f::d2e
+Connecting to download-center.epson.com (download-center.epson.com)|23.200.60.141|:443... connected.
+HTTP request sent, awaiting response... 403 Forbidden
+2026-07-15 11:58:51 ERROR 403: Forbidden.
+
+febri@ubuntu:~/Downloads$</pre></p>
+    <p>Cara yang fix, pake User-Agent browser</p>
+    <p><pre>wget \
+--user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0" \
+"https://download-center.epson.com/f/module/fa120df3-ac90-44a1-b41e-c65568b3e4d6/epson-printer-utility_1.2.3-1_amd64.deb"</pre></p>
+    <p><pre>febri@ubuntu:~/Downloads$ wget \
+--user-agent="Mozilla/5.0 (X11; Linux x86_64; rv:152.0) Gecko/20100101 Firefox/152.0" \
+"https://download-center.epson.com/f/module/fa120df3-ac90-44a1-b41e-c65568b3e4d6/epson-printer-utility_1.2.3-1_amd64.deb"
+--2026-07-15 12:01:12--  https://download-center.epson.com/f/module/fa120df3-ac90-44a1-b41e-c65568b3e4d6/epson-printer-utility_1.2.3-1_amd64.deb
+Resolving download-center.epson.com (download-center.epson.com)... 23.200.60.141, 2600:1417:5c00:28f::d2e, 2600:1417:5c00:285::d2e
+Connecting to download-center.epson.com (download-center.epson.com)|23.200.60.141|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/plain]
+Saving to: ‘epson-printer-utility_1.2.3-1_amd64.deb’
+
+epson-printer-utili     [   <=>              ]   2.34M  4.75MB/s    in 0.5s    
+
+2026-07-15 12:01:12 (4.75 MB/s) - ‘epson-printer-utility_1.2.3-1_amd64.deb’ saved [2451488]
+
+febri@ubuntu:~/Downloads$</pre></p>
+    <p>Bisa kan?</p>
+    </div>
+
+  </div>
+
+   <footer class="footer">
+        <div class="icons">
+           <a href="https://facebook.com/fnlqxz"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.linkedin.com/in/febriyanto-nugroho/"><i class="fab fa-linkedin"></i></a>
+           <a href="https://instagram.com/fnlqxz"><i class="fab fa-instagram"></i></a>
+           <a href="https://github.com/febnug"><i class="fab fa-github"></i></a>
+<a href="https://stackoverflow.com/users/3649174/febriyanto-nugroho?tab=profile"><i class="fab fa-stack-overflow"></i></a>
+<a href="https://twitter.com"><i class="fab fa-twitter"></i></a>
+            <p class="tulisan">
+                &copy; 2015 - now
+            </p>
+<div class="tanda_tangan">
+<p>febriyanto</p> 
+<p>nugroho</p>
+</div>
+        </div>
+    </footer>
+
+</body></html>
